@@ -14,7 +14,7 @@ import stdlib.core
 
 Column = {{
     
-    to_int(x: string): int = Int.of_utf8(x) 
+    to_int(x: string): int = String.byte_at_unsafe(0, x)
     
     from_int(x: int): string = Text.to_string(Text.from_character(x))
     
