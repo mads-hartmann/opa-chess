@@ -6,36 +6,33 @@
 //  Copyright 2011 Sideways Coding. All rights reserved.
 // 
 
+package chess.chess
+
 import stdlib.web.template
 import stdlib.core.map
+import stdlib.core
+
+Column = {{
+    
+    to_int(x: string): int = Int.of_utf8(x) 
+    
+    from_int(x: int): string = Text.to_string(Text.from_character(x))
+    
+    next(letter: string): string = 
+        Column.to_int(letter) |> x -> Column.from_int(x+1)
+    
+}}
 
 /*
     {Types}
 */
 
-type kind      = {king} / {queen} / {rook} / {bishop} / {knight} / {pawn}
-type colorC    = {white} / {black}
-type piece     = {kind: kind ; color: colorC}
-type position  = {letter: string ; number: int ; piece: option(piece) }
-type board     = {positions: stringmap(intmap(position))}
-type direction = {left_up} / {left_down} / {right_up} / {right_down}
-
-/*
-    {Communication}
-*/
-
-@publish game = Network.cloud("game") : Network.network(board)
-
-message_recieved(b: board) = 
-    // do Dom.set_text(Dom.select_id("player"),colorc_to_string(m.next_player))
-    Board.update(b)
-
-start() = 
-    <div onready={_ -> Network.add_callback(message_recieved, game)}>
-    <div onready={_ -> Board.prepare(Board.create()) }>
-        {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
-    </div>
-    </div>
+type kind           = {king} / {queen} / {rook} / {bishop} / {knight} / {pawn}
+type colorC         = {white} / {black}
+type piece          = {kind: kind ; color: colorC}
+type chess_position = {letter: string ; number: int ; piece: option(piece) }
+type board          = {chess_positions: stringmap(intmap(chess_position))}
+type direction      = {left_up} / {left_down} / {right_up} / {right_down}
 
 /*
     {Misc functions}
@@ -64,9 +61,6 @@ create_string_map(xs: list((string,'a))): stringmap('a) =
 
 create_int_map(xs: list((int,'a))): intmap('a) = 
     List.fold( tuple,map -> IntMap_add(tuple.f1,tuple.f2,map),xs,IntMap_empty)
-
-next_char(letter: string): string = 
-    Char.of_string(letter) |> c -> int_of_char(c) |> x -> Char.unsafe_chr(x+1) |> Char.to_string(_)
     
 
 /*
@@ -77,7 +71,7 @@ Board = {{
     
     user_color = {white}
         
-    @private fields_iteri(fs: list('a),board): void = 
+    fields_iteri(fs: list('a),board): void = 
         Dom.select_raw("tr") |> Dom.sub(_,1,9) |> domToList(_) |> List.rev(_) |> List.iteri(rowi,tr -> 
             Dom.select_children(tr) |> Dom.sub(_,1,9) |> domToList(_) |> List.iteri(columi, td -> 
                 List.iter( f -> f(rowi+1,columi+1,td,board), fs) // adding +1 because the indexes are 0-based
@@ -85,17 +79,17 @@ Board = {{
         ,_)
         
     prepare(board: board): void = 
-        do fields_iteri([colorize(_,_,_,_), labelize(_,_,_,_), add_on_click_events(_,_,_,_)], board)
+        do fields_iteri([colorize(_,_,_,_), labelize(_,_,_,_)], board) //add_on_click_events(_,_,_,_)
         do place_pieces(board)
         void        
 
     place_pieces(board: board) = 
         do Dom.select_raw("td img") |> Dom.remove(_)
-        do Map.To.val_list(board.positions) |> List.iter(column ->  
+        do Map.To.val_list(board.chess_positions) |> List.iter(column ->  
             Map.To.val_list(column) |> List.iter(pos -> 
                 Option.iter( piece -> 
                     img = Dom.of_xhtml(<img src="/resources/{kind_to_string(piece.kind)}_{colorc_to_string(piece.color)}.png" />)
-                    do Position.select_position(pos) |> Dom.put_inside(_,img)
+                    do Position.select_chess_position(pos) |> Dom.put_inside(_,img)
                     void
                 ,pos.piece)
             ,_)
@@ -106,9 +100,9 @@ Board = {{
         place_pieces(board)
         
 
-    piece_at(row,column,board): option(position) =
-        column_letter = Char.unsafe_chr(column+64) |> Char.to_string(_)
-        Map.get(column_letter, board.positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_) |> pos ->
+    piece_at(row,column,board): option(chess_position) =
+        column_letter = Column.from_int(column+64)
+        Map.get(column_letter, board.chess_positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_) |> pos ->
             match pos with 
                 | { piece = { some = {color = color kind = kind}} ...} -> if color == user_color then { some = pos } else {none}
                 | _ -> {none}
@@ -125,27 +119,27 @@ Board = {{
                 pos = Option.get(movable)
                 highlight_possible_movements(pos, Option.get(pos.piece))
             else if Dom.has_class(td,"movable") then 
-                posFrom = Dom.select_raw("td.selected") |> Position.position_from_dom(_, board)
-                posTo = Position.position_from_dom(td, board)
+                posFrom = Dom.select_raw("td.selected") |> Position.chess_position_from_dom(_, board)
+                posTo = Position.chess_position_from_dom(td, board)
                 do Dom.select_raw("td.movable")  |> Dom.remove_class(_,"movable")
                 do Dom.select_raw("td.selected") |> Dom.remove_class(_,"selected")
                 newBoard = move(posFrom, posTo, board)
-                do Network.broadcast(newBoard, game)
+                // do Network.broadcast(newBoard, game)
                 void
             else 
                 void
         ))
         void
     
-    highlight_possible_movements(pos: position, piece: piece): void = 
-        do Position.movable_positions(pos,piece,user_color) |> List.iter(pos -> 
-            movable = Position.select_position(pos)
+    highlight_possible_movements(pos: chess_position, piece: piece): void = 
+        do Position.movable_chess_positions(pos,piece,user_color) |> List.iter(pos -> 
+            movable = Position.select_chess_position(pos)
             Dom.add_class(movable,"movable")
         ,_)
         void
             
     labelize(row,column,td,board): void = 
-        Dom.add_class(td, (Char.unsafe_chr(column+64) |> Char.to_string(_)) ^ Int.to_string(row)) 
+        Dom.add_class(td, Column.from_int(column+64) ^ Int.to_string(row)) 
     
     colorize(row,column,td,board): void = 
         if (mod(row,2) == 0) then 
@@ -155,17 +149,17 @@ Board = {{
 
     move(posFrom, posTo, board): board = 
         // remove the old piece
-        positions = Map.replace(posFrom.letter, rows -> (
+        chess_positions = Map.replace(posFrom.letter, rows -> (
             Map.replace(posFrom.number, (oldPos -> { oldPos with piece = {none}}), rows)
-        ), board.positions)
+        ), board.chess_positions)
         // place the new piece 
-        positions2 = Map.replace(posTo.letter, rows -> (
+        chess_positions2 = Map.replace(posTo.letter, rows -> (
             Map.replace(posTo.number, (oldPos -> { oldPos with piece = posFrom.piece}), rows)
-        ), positions)
-        { board with positions = positions2}
+        ), chess_positions)
+        { board with chess_positions = chess_positions2}
         
     
-    create() = { positions = 
+    create() = { chess_positions = 
         columns = ["A","B","C","D","E","F","G","H"] 
         rows = duplicate(8,[8,7,6,5,4,3,2,1])
         List.map( column -> (column, 
@@ -202,17 +196,17 @@ Board = {{
 
 Position = {{
 
-    position_from_dom(dom: dom, board): position = 
+    chess_position_from_dom(dom: dom, board): chess_position = 
         // Very hacky. The 7th and 8th chars are the colulm and row number.
         clz    = Dom.get_property(dom,"class") |> Option.get(_)
         column = String.get(6, clz)
         row    = String.get(7, clz) |> String.to_int(_)
-        Map.get(column, board.positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_)
+        Map.get(column, board.chess_positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_)
 
-    select_position(pos: position): dom = 
+    select_chess_position(pos: chess_position): dom = 
         Dom.select_raw("." ^ pos.letter ^ Int.to_string(pos.number))
         
-    movable_positions(pos: position, piece: piece, user_color: colorC): list(position) =    
+    movable_chess_positions(pos: chess_position, piece: piece, user_color: colorC): list(chess_position) =    
         
         xs = match piece.kind with
             | {king}   -> 
@@ -267,23 +261,23 @@ Position = {{
         Helper functions. 
     */
     
-    @private right(pos,i): option(position) = 
-        x = Char.of_string(pos.letter) |> c -> int_of_char(c) 
-        l = Char.unsafe_chr(x+i) |> Char.to_string(_)
+    right(pos,i): option(chess_position) = 
+        x = Column.to_int(pos.letter)
+        l = Column.from_int(x+i)
         if (x+i) > 72 then {none} else {some = {pos with letter = l}}
     
-    @private left(pos,i): option(position) = 
-        x = Char.of_string(pos.letter) |> c -> int_of_char(c) 
-        l = Char.unsafe_chr(x-i) |> Char.to_string(_)
+    left(pos,i): option(chess_position) = 
+        x = Column.to_int(pos.letter)
+        l = Column.from_int(x-i)
         if (x-i) < 65 then {none} else {some = {pos with letter = l}}
             
-    @private up(pos,i): option(position) =             
+    up(pos,i): option(chess_position) =             
         if (pos.number + i) > 8 then {none} else {some = {pos with number = pos.number+i}}
                                                      
-    @private down(pos,i): option(position) =        
+    down(pos,i): option(chess_position) =        
         if (pos.number - i) < 1 then {none} else {some = {pos with number = pos.number-i}}
 
-    @private right_inclusive(pos: position,i: int): list(position) =
+    right_inclusive(pos: chess_position,i: int): list(chess_position) =
         rec r(pos,i,acc) = match i with
             | 0 -> acc
             | x -> match right(pos,1) with
@@ -291,7 +285,7 @@ Position = {{
                 | {some = p} -> r(p,i-1,[p|acc])
         r(pos,i,[])
 
-    @private left_inclusive(pos: position,i: int): list(position) =
+    left_inclusive(pos: chess_position,i: int): list(chess_position) =
         rec r(pos,i,acc) = match i with
             | 0 -> acc
             | x -> match left(pos,1) with
@@ -299,7 +293,7 @@ Position = {{
                 | {some = p} -> r(p,i+1,[p|acc])
         r(pos,i,[])
 
-    @private up_inclusive(pos: position,i: int): list(position) =
+    up_inclusive(pos: chess_position,i: int): list(chess_position) =
         rec r(pos,i,acc) = match i with
             | 0 -> acc
             | x -> match up(pos,1) with
@@ -307,7 +301,7 @@ Position = {{
                 | {some = p} -> r(p,i-1,[p|acc])
         r(pos,i,[])
         
-    @private down_inclusive(pos: position,i: int): list(position) =
+    down_inclusive(pos: chess_position,i: int): list(chess_position) =
         rec r(pos,i,acc) = match i with
             | 0 -> acc
             | x -> match down(pos,1) with
@@ -315,8 +309,8 @@ Position = {{
                 | {some = p} -> r(p,i+1,[p|acc])
         r(pos,i,[])
 
-    @private diagonal(direction: direction, pos: position): list(position) = 
-        rec r(pos: position,i,acc) = match i with
+    diagonal(direction: direction, pos: chess_position): list(chess_position) = 
+        rec r(pos: chess_position,i,acc) = match i with
             | 0 -> acc
             | x -> 
                 p = match direction with
@@ -329,10 +323,3 @@ Position = {{
                     | {some = p} -> r(p,i-1,[p|acc])
         r(pos,7,[])
 }}
-
-
-/*
-    {Start the ting}
-*/
-    
-server = Server.one_page_bundle("Chess",[@static_resource_directory("resources")],["resources/style.css"], start)

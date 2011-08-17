@@ -1,0 +1,238 @@
+//
+// style.scss
+// chess
+// 
+// Created by Mads Hartmann Jensen on 2011-08-07.
+// Copyright 2011 Sideways Coding. All rights reserved.
+//
+
+@import "compass/reset";
+@import "compass/utilities/general/clearfix";
+@import "compass/typography/lists/horizontal-list";
+@import "compass/css3/box-shadow";
+@import "compass/css3/border-radius";
+
+$red: #B30A0A;
+
+/*
+  Form element styling 
+*/
+
+input, textarea { 
+	padding: 9px;
+	border: solid 1px #E5E5E5;
+	outline: 0;
+	font: normal 13px/100% Verdana, Tahoma, sans-serif;
+	width: 200px;
+	color: #999;
+	background: #FFFFFF url('bg_form.png') left top repeat-x;
+	background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));
+	background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
+	@include box-shadow(rgba(0, 0, 0, 0.1),0px, 0px, 8px);
+	
+	&:hover, &:focus {
+	  border-color: #617798; 
+  	@include box-shadow(rgba(0, 0, 0, 0.15),0px, 0px, 8px);
+	};
+	
+	&:focus {
+	  color: #617798;
+	}
+}
+
+textarea { 
+	width: 400px;
+	max-width: 400px;
+	height: 150px;
+	line-height: 150%;
+}
+
+/*
+  Other
+*/
+
+body {
+    margin: 0px;
+    background : url("/resources/bg.png") repeat scroll 0% 0%;
+}
+
+#status {
+    position: absolute;
+    height: 10%;
+    width: 80%;
+    padding: 0% 10%;
+    text-align: center;
+    background: #000;
+    color: #fff;
+}
+
+#board {
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+    height: 90%;
+}
+
+tr {
+    width: 9%;
+}
+
+td {
+    text-align: center;
+}
+
+.black {
+    background: #BC7A41;
+    color: #fff;
+}
+
+.white {
+    background: #F6C492;
+    color: #000;
+}
+
+.selected {
+    background: green;
+}
+
+.movable {
+    background: orange;
+}
+
+/*
+  login page
+*/
+
+
+#signup, #login, #lobby {
+  
+  width: 400px;
+  position: absolute;
+  left: 50%;
+  margin-left: -200px;
+  top: 100px;
+  color: #000;
+  
+  .content {
+    background: rgba(224, 224, 224, 1);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 5px black;
+    @include clearfix;
+  }
+  
+  ul { 
+    text-align: left;
+  }
+    
+  input[type=submit] {
+    float: right;
+    margin-top: 20px;
+  }
+}
+
+#login {
+  width: 260px;
+  margin-left: -130px;
+}
+
+#lobby {
+  input[type=submit] {
+    float: none;
+    margin-top: 0px;
+    width: 260px;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+/*
+  create page
+*/
+
+#create {
+  
+  label {
+    width: 100px;
+    display: inline-block;
+  }
+  
+  input {
+    width: 300px;
+  }
+  
+}
+
+/*
+  forms 
+*/
+
+.error_container {
+  background: $red;
+  margin: 20px 0px;
+  padding: 10px;
+  border: 2px solid black;
+  color: white;
+  
+  ul {
+    text-align: left;
+    padding-left: 20px;
+    list-style: disc;
+  }
+}
+
+.no_errors {
+  display: none;
+}
+
+.has_errors {
+  display: block;
+}
+
+.button, input[type=submit] {
+    width: auto;
+  	padding: 9px 15px;
+  	background: #617798;
+  	border: 0;
+  	font-size: 14px;
+  	color: #FFFFFF;
+  	text-decoration: none;
+  	@include border-radius(5px);
+  	
+  	&:hover {
+  	  background: #617794;
+  	};
+  	
+  	&:active {
+  	  background: #6177CD;
+  	};
+}
+
+.button {display: inline-block;}
+
+/*
+  Lobby styling 
+*/
+
+#lobby {
+  #menu {
+    li {
+      margin: 10px 0px;
+      text-align: center;
+      .button {
+        width: 200px;
+      }
+    }
+  }
+  
+  .back {
+    display: inline-block;
+    margin: 0px 0px 10px 0px;
+    color: #000;
+    text-decoration: none;
+  }
+  
+} 
+

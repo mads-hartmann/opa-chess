@@ -1,4 +1,11 @@
-<div id="status">Current player: <span id="player">white</span></div>
+<div id="status">
+    <ul>
+        <li>Current player: <span id="color_of_current_player"></span></li>
+        <li>You're: <span id="color_of_player"></span></li>
+        <li>Name of the game: <span id="name_of_game"></span></li>
+    </ul>
+</div>
+    
 <table border="0" cellspacing="5" cellpadding="5" id="board">
     <tr>
         <th></th>
