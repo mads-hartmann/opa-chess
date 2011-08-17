@@ -70,16 +70,16 @@ create_int_map(xs: list((int,'a))): intmap('a) =
 Board = {{
     
     user_color = {white}
-        
-    fields_iteri(fs: list('a),board): void = 
-        Dom.select_raw("tr") |> Dom.sub(_,1,9) |> domToList(_) |> List.rev(_) |> List.iteri(rowi,tr -> 
+                
+    prepare(board: board): void = 
+        do Dom.select_raw("tr") |> Dom.sub(_,1,9) |> domToList(_) |> List.rev(_) |> List.iteri(rowi,tr -> 
             Dom.select_children(tr) |> Dom.sub(_,1,9) |> domToList(_) |> List.iteri(columi, td -> 
-                List.iter( f -> f(rowi+1,columi+1,td,board), fs) // adding +1 because the indexes are 0-based
+                do colorize(rowi+1,columi+1,td,board)
+                do labelize(rowi+1,columi+1,td,board)
+                do add_on_click_events(rowi+1,columi+1,td,board)
+                void
             ,_)
         ,_)
-        
-    prepare(board: board): void = 
-        do fields_iteri([colorize(_,_,_,_), labelize(_,_,_,_)], board) //add_on_click_events(_,_,_,_)
         do place_pieces(board)
         void        
 
@@ -109,22 +109,21 @@ Board = {{
         
     add_on_click_events(row,column,td,board: board): void = 
         do Dom.bind(td, {click}, (_ -> 
-                        
             movable = piece_at(row,column,board)
-            
+
             if Option.is_some(movable) then 
+                pos = Option.get(movable)
                 do Dom.select_raw("td.movable")  |> Dom.remove_class(_,"movable")
                 do Dom.select_raw("td.selected") |> Dom.remove_class(_,"selected")
                 do Dom.add_class(td, "selected")
-                pos = Option.get(movable)
                 highlight_possible_movements(pos, Option.get(pos.piece))
             else if Dom.has_class(td,"movable") then 
-                posFrom = Dom.select_raw("td.selected") |> Position.chess_position_from_dom(_, board)
-                posTo = Position.chess_position_from_dom(td, board)
+                posFrom  = Dom.select_raw("td.selected") |> Position.chess_position_from_dom(_, board)
+                posTo    = Position.chess_position_from_dom(td, board)
+                newBoard = move(posFrom, posTo, board)
                 do Dom.select_raw("td.movable")  |> Dom.remove_class(_,"movable")
                 do Dom.select_raw("td.selected") |> Dom.remove_class(_,"selected")
-                newBoard = move(posFrom, posTo, board)
-                // do Network.broadcast(newBoard, game)
+                // TODO: place the piece and send the message over the network
                 void
             else 
                 void
@@ -206,8 +205,7 @@ Position = {{
     select_chess_position(pos: chess_position): dom = 
         Dom.select_raw("." ^ pos.letter ^ Int.to_string(pos.number))
         
-    movable_chess_positions(pos: chess_position, piece: piece, user_color: colorC): list(chess_position) =    
-        
+    movable_chess_positions(pos: chess_position, piece: piece, user_color: colorC): list(chess_position) = (
         xs = match piece.kind with
             | {king}   -> 
                 [right(pos,1),left(pos,1),up(pos,1),down(pos,1),
@@ -256,7 +254,7 @@ Position = {{
                     else
                         [down(pos,1)]                    
         List.filter_map( x -> x , xs)
-    
+    )
     /*
         Helper functions. 
     */
