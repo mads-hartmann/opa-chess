@@ -3,8 +3,11 @@ EXE=chess.exe
 
 all: $(EXE)
 
-chess.exe: chess.user.opx chess.chess.opx chess.game.opx src/main.opa
+chess.exe: chess.types.opx chess.user.opx chess.game.opx chess.chess.opx src/main.opa
 	$(OPA) $^ -o $(EXE)
+
+chess.types.opx: src/types.opa
+	$(OPA) $^  --no-server --autocompile
 
 chess.user.opx: src/user.opa
 	$(OPA) $^  --no-server --autocompile

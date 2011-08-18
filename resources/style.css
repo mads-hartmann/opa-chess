@@ -67,7 +67,7 @@ footer, header, hgroup, menu, nav, section {
 /*
   Form element styling 
 */
-/* line 21, ../sass/style.scss */
+/* line 22, ../sass/style.scss */
 input, textarea {
   padding: 9px;
   border: solid 1px #E5E5E5;
@@ -83,7 +83,7 @@ input, textarea {
   -o-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
 }
-/* line 33, ../sass/style.scss */
+/* line 34, ../sass/style.scss */
 input:hover, input:focus, textarea:hover, textarea:focus {
   border-color: #617798;
   -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
@@ -91,12 +91,12 @@ input:hover, input:focus, textarea:hover, textarea:focus {
   -o-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
 }
-/* line 38, ../sass/style.scss */
+/* line 39, ../sass/style.scss */
 input:focus, textarea:focus {
   color: #617798;
 }
 
-/* line 43, ../sass/style.scss */
+/* line 44, ../sass/style.scss */
 textarea {
   width: 400px;
   max-width: 400px;
@@ -107,59 +107,95 @@ textarea {
 /*
   Other
 */
-/* line 54, ../sass/style.scss */
+/* line 55, ../sass/style.scss */
 body {
   margin: 0px;
-  background: url("/resources/bg.png") repeat scroll 0% 0%;
+  background: url("/resources/bg.jpg") repeat scroll 0% 0%;
 }
 
-/* line 59, ../sass/style.scss */
+/* line 60, ../sass/style.scss */
 #status {
-  position: absolute;
-  height: 10%;
-  width: 80%;
-  padding: 0% 10%;
+  height: 45px;
+  padding-bottom: 30px;
   text-align: center;
-  background: #000;
   color: #fff;
 }
-
-/* line 69, ../sass/style.scss */
-#board {
-  position: absolute;
-  bottom: 0%;
-  width: 100%;
-  height: 90%;
+/* line 66, ../sass/style.scss */
+#status ul {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  *zoom: 1;
+  margin-right: 45px;
+  color: #8D8D8D;
+  font-size: 14px;
+  font-family: Helvetica;
+  font-weight: bold;
+  line-height: 45px;
 }
-
-/* line 76, ../sass/style.scss */
-tr {
-  width: 9%;
+/* line 60, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+#status ul li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0px;
+  white-space: nowrap;
+  display: inline;
+  float: left;
+  padding-left: 4px;
+  padding-right: 4px;
 }
-
+/* line 48, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+#status ul li:first-child, #status ul li.first {
+  padding-left: 0;
+}
+/* line 49, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+#status ul li:last-child {
+  padding-right: 0;
+}
+/* line 50, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+#status ul li.last {
+  padding-right: 0;
+}
+/* line 75, ../sass/style.scss */
+#status ul li {
+  margin-left: 50px;
+  float: right;
+}
 /* line 80, ../sass/style.scss */
-td {
-  text-align: center;
-}
-
-/* line 84, ../sass/style.scss */
-.black {
-  background: #BC7A41;
+#status ul span {
   color: #fff;
 }
 
-/* line 89, ../sass/style.scss */
-.white {
-  background: #F6C492;
-  color: #000;
+/* line 86, ../sass/style.scss */
+#board {
+  width: 750px;
+  height: 750px;
+  background: url("/resources/board-bg.png") 0px 0px no-repeat;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -375px;
+  margin-left: -375px;
+}
+/* line 96, ../sass/style.scss */
+#board table {
+  margin-left: 75px;
 }
 
-/* line 94, ../sass/style.scss */
+/* line 101, ../sass/style.scss */
+td, th {
+  text-align: center;
+  width: 75px;
+  height: 75px;
+}
+
+/* line 107, ../sass/style.scss */
 .selected {
   background: green;
 }
 
-/* line 98, ../sass/style.scss */
+/* line 111, ../sass/style.scss */
 .movable {
   background: orange;
 }
@@ -167,7 +203,7 @@ td {
 /*
   login page
 */
-/* line 107, ../sass/style.scss */
+/* line 120, ../sass/style.scss */
 #signup, #login, #lobby {
   width: 400px;
   position: absolute;
@@ -176,7 +212,7 @@ td {
   top: 100px;
   color: #000;
 }
-/* line 116, ../sass/style.scss */
+/* line 129, ../sass/style.scss */
 #signup .content, #login .content, #lobby .content {
   background: #e0e0e0;
   border-radius: 10px;
@@ -185,30 +221,30 @@ td {
   overflow: hidden;
   *zoom: 1;
 }
-/* line 124, ../sass/style.scss */
+/* line 137, ../sass/style.scss */
 #signup ul, #login ul, #lobby ul {
   text-align: left;
 }
-/* line 128, ../sass/style.scss */
+/* line 141, ../sass/style.scss */
 #signup input[type=submit], #login input[type=submit], #lobby input[type=submit] {
   float: right;
   margin-top: 20px;
 }
 
-/* line 134, ../sass/style.scss */
+/* line 147, ../sass/style.scss */
 #login {
   width: 260px;
   margin-left: -130px;
 }
 
-/* line 140, ../sass/style.scss */
+/* line 153, ../sass/style.scss */
 #lobby input[type=submit] {
   float: none;
   margin-top: 0px;
   width: 260px;
 }
 
-/* line 147, ../sass/style.scss */
+/* line 160, ../sass/style.scss */
 .hidden {
   display: none;
 }
@@ -216,12 +252,12 @@ td {
 /*
   create page
 */
-/* line 157, ../sass/style.scss */
+/* line 170, ../sass/style.scss */
 #create label {
   width: 100px;
   display: inline-block;
 }
-/* line 162, ../sass/style.scss */
+/* line 175, ../sass/style.scss */
 #create input {
   width: 300px;
 }
@@ -229,7 +265,7 @@ td {
 /*
   forms 
 */
-/* line 172, ../sass/style.scss */
+/* line 185, ../sass/style.scss */
 .error_container {
   background: #b30a0a;
   margin: 20px 0px;
@@ -237,24 +273,24 @@ td {
   border: 2px solid black;
   color: white;
 }
-/* line 179, ../sass/style.scss */
+/* line 192, ../sass/style.scss */
 .error_container ul {
   text-align: left;
   padding-left: 20px;
   list-style: disc;
 }
 
-/* line 186, ../sass/style.scss */
+/* line 199, ../sass/style.scss */
 .no_errors {
   display: none;
 }
 
-/* line 190, ../sass/style.scss */
+/* line 203, ../sass/style.scss */
 .has_errors {
   display: block;
 }
 
-/* line 194, ../sass/style.scss */
+/* line 207, ../sass/style.scss */
 .button, input[type=submit] {
   width: auto;
   padding: 9px 15px;
@@ -270,33 +306,59 @@ td {
   -khtml-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 204, ../sass/style.scss */
+/* line 217, ../sass/style.scss */
 .button:hover, input[type=submit]:hover {
   background: #617794;
 }
-/* line 208, ../sass/style.scss */
+/* line 221, ../sass/style.scss */
 .button:active, input[type=submit]:active {
   background: #6177CD;
 }
 
-/* line 213, ../sass/style.scss */
+/* line 226, ../sass/style.scss */
 .button {
   display: inline-block;
 }
 
 /*
+  Board styling 
+*/
+/* line 232, ../sass/style.scss */
+#waiting {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.5);
+}
+/* line 240, ../sass/style.scss */
+#waiting h1 {
+  text-align: center;
+  color: #fff;
+  font-size: 42px;
+  height: 200px;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  margin-top: -100px;
+  margin-left: -200px;
+}
+
+/*
   Lobby styling 
 */
-/* line 221, ../sass/style.scss */
+/* line 260, ../sass/style.scss */
 #lobby #menu li {
   margin: 10px 0px;
   text-align: center;
 }
-/* line 224, ../sass/style.scss */
+/* line 263, ../sass/style.scss */
 #lobby #menu li .button {
   width: 200px;
 }
-/* line 230, ../sass/style.scss */
+/* line 269, ../sass/style.scss */
 #lobby .back {
   display: inline-block;
   margin: 0px 0px 10px 0px;

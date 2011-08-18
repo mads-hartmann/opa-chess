@@ -8,6 +8,8 @@
 
 package chess.chess
 
+import chess.types
+import chess.game 
 import stdlib.web.template
 import stdlib.core.map
 import stdlib.core
@@ -22,17 +24,6 @@ Column = {{
         Column.to_int(letter) |> x -> Column.from_int(x+1)
     
 }}
-
-/*
-    {Types}
-*/
-
-type kind           = {king} / {queen} / {rook} / {bishop} / {knight} / {pawn}
-type colorC         = {white} / {black}
-type piece          = {kind: kind ; color: colorC}
-type chess_position = {letter: string ; number: int ; piece: option(piece) }
-type board          = {chess_positions: stringmap(intmap(chess_position))}
-type direction      = {left_up} / {left_down} / {right_up} / {right_down}
 
 /*
     {Misc functions}
@@ -65,15 +56,15 @@ create_int_map(xs: list((int,'a))): intmap('a) =
 
 /*
     {Board module}
+    
+    Represents the actual board game. Keeps per user information about .... 
 */
 
 Board = {{
     
-    user_color = {white}
-                
     prepare(board: board): void = 
-        do Dom.select_raw("tr") |> Dom.sub(_,1,9) |> domToList(_) |> List.rev(_) |> List.iteri(rowi,tr -> 
-            Dom.select_children(tr) |> Dom.sub(_,1,9) |> domToList(_) |> List.iteri(columi, td -> 
+        do Dom.select_raw("tr") |> domToList(_) |> List.rev(_) |> List.iteri(rowi,tr -> 
+            Dom.select_children(tr) |> domToList(_) |> List.iteri(columi, td -> 
                 do colorize(rowi+1,columi+1,td,board)
                 do labelize(rowi+1,columi+1,td,board)
                 do add_on_click_events(rowi+1,columi+1,td,board)
@@ -102,6 +93,7 @@ Board = {{
 
     piece_at(row,column,board): option(chess_position) =
         column_letter = Column.from_int(column+64)
+        user_color = Option.get(Game.get_state()).color
         Map.get(column_letter, board.chess_positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_) |> pos ->
             match pos with 
                 | { piece = { some = {color = color kind = kind}} ...} -> if color == user_color then { some = pos } else {none}
@@ -109,6 +101,12 @@ Board = {{
         
     add_on_click_events(row,column,td,board: board): void = 
         do Dom.bind(td, {click}, (_ -> 
+            
+            name = Option.get(Game.get_state()).game
+            user_color = Option.get(Game.get_state()).color
+            next_color = match user_color with 
+                | {white} -> {black}
+                | {black} -> {white}
             movable = piece_at(row,column,board)
 
             if Option.is_some(movable) then 
@@ -121,9 +119,10 @@ Board = {{
                 posFrom  = Dom.select_raw("td.selected") |> Position.chess_position_from_dom(_, board)
                 posTo    = Position.chess_position_from_dom(td, board)
                 newBoard = move(posFrom, posTo, board)
+                channel  = Option.get(Game.get_state()).channel
                 do Dom.select_raw("td.movable")  |> Dom.remove_class(_,"movable")
                 do Dom.select_raw("td.selected") |> Dom.remove_class(_,"selected")
-                // TODO: place the piece and send the message over the network
+                do Network.broadcast({ state = newBoard turn = next_color},channel) 
                 void
             else 
                 void
@@ -131,6 +130,7 @@ Board = {{
         void
     
     highlight_possible_movements(pos: chess_position, piece: piece): void = 
+        user_color = Option.get(Game.get_state()).color
         do Position.movable_chess_positions(pos,piece,user_color) |> List.iter(pos -> 
             movable = Position.select_chess_position(pos)
             Dom.add_class(movable,"movable")

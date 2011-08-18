@@ -13,6 +13,7 @@
 @import "compass/css3/border-radius";
 
 $red: #B30A0A;
+$brick_dimensions: 75px;
 
 /*
   Form element styling 
@@ -53,42 +54,54 @@ textarea {
 
 body {
     margin: 0px;
-    background : url("/resources/bg.png") repeat scroll 0% 0%;
+    background : url("/resources/bg.jpg") repeat scroll 0% 0%;
 }
 
 #status {
-    position: absolute;
-    height: 10%;
-    width: 80%;
-    padding: 0% 10%;
+    height: $brick_dimensions - 30px;
+    padding-bottom: 30px;
     text-align: center;
-    background: #000;
     color: #fff;
+    
+    ul {
+        @include horizontal-list();
+        margin-right: 45px; 
+        color       : #8D8D8D;
+        font-size   : 14px;
+        font-family : Helvetica;
+        font-weight : bold;
+        line-height: $brick_dimensions - 30px;
+        
+        li {
+            margin-left: 50px;
+            float: right;
+        }
+        
+        span {
+            color:#fff;
+        }
+    }
 }
 
 #board {
+    width: 750px;
+    height: 750px;
+    background: url("/resources/board-bg.png") 0px 0px no-repeat;
     position: absolute;
-    bottom: 0%;
-    width: 100%;
-    height: 90%;
+    left: 50%;
+    top: 50%;
+    margin-top: -375px;
+    margin-left: -375px;
+    
+    table {
+        margin-left: $brick_dimensions;
+    }
 }
 
-tr {
-    width: 9%;
-}
-
-td {
+td, th {
     text-align: center;
-}
-
-.black {
-    background: #BC7A41;
-    color: #fff;
-}
-
-.white {
-    background: #F6C492;
-    color: #000;
+    width: 75px;
+    height: 75px;
 }
 
 .selected {
@@ -211,6 +224,32 @@ td {
 }
 
 .button {display: inline-block;}
+
+/*
+  Board styling 
+*/
+
+#waiting {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.5);
+  
+  h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 42px;
+    height: 200px;
+    width: 400px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    margin-top: -100px;
+    margin-left: -200px;
+  }
+}
 
 /*
   Lobby styling 

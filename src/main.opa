@@ -6,6 +6,7 @@
 //  Copyright 2011 Sideways Coding. All rights reserved.
 // 
 
+import chess.types
 import chess.chess
 import chess.user
 import chess.game
@@ -111,7 +112,7 @@ lobby() = (
             | ~{user} -> (
                 name = Dom.get_value(#name)
                 match Game.create(name, user) with 
-                    | {success = game } -> Client.goto("/game/" ^ name)// set white payer, create channel, show waiting message.
+                    | {success = game } -> Client.goto("/game/" ^ name)
                     | {failure = xs }   -> show_error(xs)
             )
             | {unlogged} -> Client.goto("/login")
@@ -123,12 +124,22 @@ lobby() = (
                 do Dom.remove_class(#create, "hidden")
                 Dom.add_class(#menu, "hidden")
             | { unlogged } -> Client.goto("/login")
-    
+        
     menu_join_a_game_onclick() = 
         match User.get_status() with
             | { user = usr } -> 
                 do Dom.remove_class(#join,"hidden")
-                Dom.add_class(#menu,"hidden")
+                do Dom.add_class(#menu,"hidden")
+                do Dom.remove_content(#gamesList)
+                Map.To.val_list(/game) 
+                    |> List.filter_map( x -> x, _) 
+                    |> List.iter( x -> Dom.transform([#gamesList +<- 
+                            <li onclick={_ -> 
+                                match Game.join(x.name, usr) with 
+                                    | { success = game } -> Client.goto("/game/" ^ x.name) 
+                                    | { failure = xs } -> show_error(xs)
+                            }>{x.name}</li>]),
+                        _)
             | {unlogged} -> Client.goto("/login")
             
     Resource.styled_page("Chess", style,
@@ -140,6 +151,7 @@ lobby() = (
             <form>
                 <ul id=#join class="hidden">
                     <a class="back" onclick={ _ -> join_back_onclick() }> ← Back</a>
+                    <ul id=#gamesList></ul>
                     <h2>Joining an existent game</h2>
                 </ul>
                 <ul id=#create class="hidden">
@@ -163,12 +175,24 @@ lobby() = (
 )
 
 
-when_ready(name,color): void = (
+when_ready(name,color,channel): void = (
     do Dom.set_text(#color_of_player,colorc_to_string(color))
     do Dom.set_text(#name_of_game, name)
-    do Dom.set_text(#color_of_current_player, colorc_to_string(color))
+    do Dom.set_text(#color_of_current_player, colorc_to_string({white}))
+    do Network.add_callback(message_recieved, channel)
     Board.prepare(Board.create())
 )
+
+message_recieved(msg: message) = 
+    match msg with 
+        | { joining = user } -> Dom.remove(#waiting)
+        | { state   = board turn = color } -> 
+            do Dom.transform([#color_of_current_player <- colorc_to_string(color)])
+            Board.update(board)
+
+send_join_message(user, channel) = 
+     _ = Network.broadcast({ joining = user},channel) 
+     void
 
 boardgame(name: string) = (
     // this page will only get rendered if the user is logged in so it's safe to 'get'.
@@ -177,12 +201,19 @@ boardgame(name: string) = (
             match Game.get(name) with 
                 | { some = game } -> (
                     
-                    color = if (Option.get(game.white) == user) then {white} else {black} 
-
-                    Resource.styled_page("Chess", style, 
-                        <div onready={_ -> when_ready(name,color) }>
+                    channel = Network.cloud(name): Network.network(message)
+                    
+                    xml = color -> 
+                        <div onready={_ -> when_ready(name,color,channel) }>
                             {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
-                        </div>    
+                        </div>
+                                        
+                    if (Option.get(game.white) == user) then (
+                        match game.black with 
+                            | ~{some} -> Resource.styled_page("Chess", style, xml({white}))
+                            | {none}  -> Resource.styled_page("Chess", style, <>{xml({white})}</><div id="waiting"><h1>Waiting for another player to join</h1></div>)
+                    ) else (
+                        Resource.styled_page("Chess", style, <>{xml({black})}<div onready={_ -> send_join_message(user, channel) }></div></>)
                     )
                 ) 
                 | {none}  -> fourOfour()

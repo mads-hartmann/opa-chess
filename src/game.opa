@@ -8,22 +8,29 @@
 
 package chess.game 
 
+import chess.types
 import chess.user
 
 db /game: stringmap(option(game))
 db /game[_] = none 
 
-type game = {
-    white: option(user) ; 
-    black: option(user) ; 
-    name: string 
-}
-
 Game = {{
+    
+    user_state = UserContext.make({none}: option(Game.status))
+
+    get_state() = UserContext.execute((a -> a), user_state)
 
     get(name: string): option(game) = /game[name]
 
-    // join(game: game, user:user ) = 
+    join(name: string, user: user): outcome(game,list(string)) =
+        match /game[name] with 
+            | { some = game } -> 
+                g = { game with black = some(user) }
+                channel = Network.cloud(name): Network.network(message)
+                do /game[name] <- some(g)
+                do UserContext.change(( _ -> { some = { game = name color = {black} channel = channel}}), user_state)
+                { success = g}
+            | { none } -> { failure = ["No such game exists."] }
     
     create(name: string, user: user): outcome(game,list(string)) = 
         match /game[name] with 
@@ -34,6 +41,8 @@ Game = {{
                 ) else (
                     game = { name = name white = some(user) black = none }
                     do /game[name] <- some(game)
+                    channel = Network.cloud(name): Network.network(message)
+                    do UserContext.change(( _ -> { some = { game = name color = {white} channel = channel }}), user_state)
                     { success = game }
                 )
             )
