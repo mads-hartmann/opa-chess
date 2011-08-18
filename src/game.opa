@@ -6,10 +6,7 @@
 //  Copyright 2011 Sideways Coding. All rights reserved.
 // 
 
-package chess.game 
-
-import chess.types
-import chess.user
+package chess
 
 db /game: stringmap(option(game))
 db /game[_] = none 
@@ -26,9 +23,10 @@ Game = {{
         match /game[name] with 
             | { some = game } -> 
                 g = { game with black = some(user) }
-                channel = Network.cloud(name): Network.network(message)
+                channel = Network.cloud(name): Network.network(message) // should return the network already created in 'create'
+                do Network.broadcast({ joining = user},channel) 
                 do /game[name] <- some(g)
-                do UserContext.change(( _ -> { some = { game = name color = {black} channel = channel}}), user_state)
+                do UserContext.change(( _ -> { some = { game = name color = {black} channel = channel current_color = {white}}}), user_state)
                 { success = g}
             | { none } -> { failure = ["No such game exists."] }
     
@@ -40,9 +38,9 @@ Game = {{
                     { failure = ["The name has to be non-empty"]}
                 ) else (
                     game = { name = name white = some(user) black = none }
-                    do /game[name] <- some(game)
                     channel = Network.cloud(name): Network.network(message)
-                    do UserContext.change(( _ -> { some = { game = name color = {white} channel = channel }}), user_state)
+                    do /game[name] <- some(game)
+                    do UserContext.change(( _ -> { some = { game = name color = {white} current_color = {white} channel = channel }}), user_state)
                     { success = game }
                 )
             )

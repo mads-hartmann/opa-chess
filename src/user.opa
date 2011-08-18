@@ -6,9 +6,8 @@
 //  Copyright 2011 Sideways Coding. All rights reserved.
 // 
 
-package chess.user
+package chess
 
-import chess.types
 import stdlib.web.client
 
 db /user: stringmap(option(user))

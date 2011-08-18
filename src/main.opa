@@ -6,12 +6,7 @@
 //  Copyright 2011 Sideways Coding. All rights reserved.
 // 
 
-import chess.types
-import chess.chess
-import chess.user
-import chess.game
-import stdlib.web.template
-import stdlib.web.client
+package chess
 
 /*
     {Pages}
@@ -174,25 +169,23 @@ lobby() = (
     )
 )
 
-
-when_ready(name,color,channel): void = (
-    do Dom.set_text(#color_of_player,colorc_to_string(color))
-    do Dom.set_text(#name_of_game, name)
-    do Dom.set_text(#color_of_current_player, colorc_to_string({white}))
-    do Network.add_callback(message_recieved, channel)
-    Board.prepare(Board.create())
-)
-
-message_recieved(msg: message) = 
+/* Message received about the state of the game. */
+@client message_recieved(msg: message) = 
     match msg with 
         | { joining = user } -> Dom.remove(#waiting)
         | { state   = board turn = color } -> 
-            do Dom.transform([#color_of_current_player <- colorc_to_string(color)])
-            Board.update(board)
+            do Board.update(board)
+            do UserContext.change(( x -> some({ Option.get(x) with current_color = color})), Game.user_state)
+            Dom.transform([#color_of_current_player <- colorc_to_string(color)])
 
-send_join_message(user, channel) = 
-     _ = Network.broadcast({ joining = user},channel) 
-     void
+@client when_ready(name,color): void = (
+    channel  = Option.get(Game.get_state()).channel
+    do Dom.set_text(#color_of_player,colorc_to_string(color))
+    do Dom.set_text(#name_of_game, name)
+    do Dom.set_text(#color_of_current_player, colorc_to_string({white}))
+    do Network.observe(message_recieved, channel)
+    Board.prepare(Board.create())
+)
 
 boardgame(name: string) = (
     // this page will only get rendered if the user is logged in so it's safe to 'get'.
@@ -201,10 +194,8 @@ boardgame(name: string) = (
             match Game.get(name) with 
                 | { some = game } -> (
                     
-                    channel = Network.cloud(name): Network.network(message)
-                    
                     xml = color -> 
-                        <div onready={_ -> when_ready(name,color,channel) }>
+                        <div onready={_ -> when_ready(name,color) }>
                             {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
                         </div>
                                         
@@ -213,7 +204,7 @@ boardgame(name: string) = (
                             | ~{some} -> Resource.styled_page("Chess", style, xml({white}))
                             | {none}  -> Resource.styled_page("Chess", style, <>{xml({white})}</><div id="waiting"><h1>Waiting for another player to join</h1></div>)
                     ) else (
-                        Resource.styled_page("Chess", style, <>{xml({black})}<div onready={_ -> send_join_message(user, channel) }></div></>)
+                        Resource.styled_page("Chess", style, xml({black}))
                     )
                 ) 
                 | {none}  -> fourOfour()
