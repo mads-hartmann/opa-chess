@@ -173,10 +173,9 @@ lobby() = (
 @client message_recieved(msg: message) = 
     match msg with 
         | { joining = user } -> Dom.remove(#waiting)
-        | { state   = board turn = color } -> 
+        | { state   = board } -> 
             do Board.update(board)
-            do UserContext.change(( x -> some({ Option.get(x) with current_color = color})), Game.user_state)
-            Dom.transform([#color_of_current_player <- colorc_to_string(color)])
+            Dom.transform([#color_of_current_player <- colorc_to_string(board.current_color)])
 
 @client when_ready(name,color): void = (
     channel  = Option.get(Game.get_state()).channel

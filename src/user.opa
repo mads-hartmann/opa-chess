@@ -13,6 +13,10 @@ import stdlib.web.client
 db /user: stringmap(option(user))
 db /user[_] = none
 
+type user = { name: string ; email: string ; password: string }
+
+type User.status = { user: user } / { unlogged }
+
 User = {{
     
     state = UserContext.make({unlogged} : User.status)
