@@ -8,6 +8,8 @@
 
 package chess
 
+type chess_position = {letter: string ; number: int ; piece: option(piece) }
+
 Position = {{
 
     chess_position_from_dom(dom: dom, board): chess_position = 

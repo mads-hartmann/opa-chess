@@ -11,7 +11,7 @@ package chess
 type kind           = {king} / {queen} / {rook} / {bishop} / {knight} / {pawn}
 type colorC         = {white} / {black}
 type piece          = {kind: kind ; color: colorC}
-type chess_position = {letter: string ; number: int ; piece: option(piece) }
+
 type direction      = {left_up} / {left_down} / {right_up} / {right_down}
 
 
