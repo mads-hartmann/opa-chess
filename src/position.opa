@@ -28,11 +28,11 @@ Position = {{
     (
         xs = match piece.kind with
             | {king}   -> 
-                [right(pos,board,1),left(pos,board,1),up(pos,board,1),down(pos,board,1),
-                 right(pos,board,1) |> Option.bind( p -> up(p,board,1) ,_),
-                 right(pos,board,1) |> Option.bind( p -> down(p,board,1) ,_),
-                 left(pos,board,1)  |> Option.bind( p -> up(p,board,1) ,_),
-                 left(pos,board,1)  |> Option.bind( p -> down(p,board,1) ,_)]
+                [right_option(pos,board,1),left_option(pos,board,1),up_option(pos,board,1),down_option(pos,board,1),
+                 right(pos,board,1) |> Option.bind( p -> up_option(p,board,1) ,_),
+                 right(pos,board,1) |> Option.bind( p -> down_option(p,board,1) ,_),
+                 left(pos,board,1)  |> Option.bind( p -> up_option(p,board,1) ,_),
+                 left(pos,board,1)  |> Option.bind( p -> down_option(p,board,1) ,_)]
             | {queen}  -> 
                 (diagonal({left_up},pos,board)  ++ diagonal({left_down},pos,board) ++ 
                  diagonal({right_up},pos,board) ++ diagonal({right_down},pos,board) ++
@@ -55,14 +55,14 @@ Position = {{
                     diagonal({right_down},pos,board)]) |> 
                 List.map( x -> { some = x}, _)
             | {knight} -> 
-                [right(pos,board,1) |> Option.bind( p -> down(p,board,2),_),
-                 right(pos,board,1) |> Option.bind( p -> up(p,board,2),_),
-                 left(pos,board,1) |> Option.bind(p -> down(p,board,2),_),
-                 left(pos,board,1) |> Option.bind(p -> up(p,board,2),_),
-                 up(pos,board,1) |> Option.bind( p -> left(p,board,2),_),
-                 up(pos,board,1) |> Option.bind( p -> right(p,board,2),_),
-                 down(pos,board,1) |> Option.bind(p -> left(p,board,2),_),
-                 down(pos,board,1) |> Option.bind(p -> right(p,board,2),_)]
+                [right(pos,board,1) |> Option.bind( p -> down_option(p,board,2),_),
+                 right(pos,board,1) |> Option.bind( p -> up_option(p,board,2),_),
+                 left(pos,board,1) |> Option.bind(p -> down_option(p,board,2),_),
+                 left(pos,board,1) |> Option.bind(p -> up_option(p,board,2),_),
+                 up(pos,board,1) |> Option.bind( p -> left_option(p,board,2),_),
+                 up(pos,board,1) |> Option.bind( p -> right_option(p,board,2),_),
+                 down(pos,board,1) |> Option.bind(p -> left_option(p,board,2),_),
+                 down(pos,board,1) |> Option.bind(p -> right_option(p,board,2),_)]
             | {pawn}   -> 
                 if user_color == {white} then
                     if pos.number == 2 then
@@ -79,44 +79,59 @@ Position = {{
     /*
         Helper functions. 
     */
-    
+     
+     
+    mov_opt(pos,board,i,f) =
+        match f(pos,board,i) with
+            | {none} -> {none}
+            | ~{some} -> if Board.has_piece(board,some.number,some.letter) then {none} else {some = some}
+
+    right_option(pos,board,i) = mov_opt(pos,board,i,right(_,_,_))
+    left_option(pos,board,i) = mov_opt(pos,board,i,left(_,_,_))
+    up_option(pos,board,i) = mov_opt(pos,board,i,up(_,_,_))
+    down_option(pos,board,i) = mov_opt(pos,board,i,down(_,_,_))
+        
     right(pos: chess_position,board: board,i: int): option(chess_position) = 
         x = Column.to_int(pos.letter)
         l = Column.from_int(x+i)
-        if (x+i) > 72 then {none} else {some = {pos with letter = l}}
+        next_pos = {pos with letter = l}
+        if (x+i) > 72 then {none} else {some = next_pos}
     
     left(pos: chess_position,board: board,i: int): option(chess_position) = 
         x = Column.to_int(pos.letter)
         l = Column.from_int(x-i)
-        if (x-i) < 65 then {none} else {some = {pos with letter = l}}
+        next_pos = {pos with letter = l}
+        if (x-i) < 65 then {none} else {some = next_pos}
             
     up(pos: chess_position,board: board,i: int): option(chess_position) = 
-        if (pos.number + i) > 8 then {none} else {some = {pos with number = pos.number+i}}
+        next_pos = {pos with number = pos.number+i}
+        if (pos.number + i) > 8 then {none} else {some = next_pos}
                                                      
     down(pos: chess_position,board: board,i: int): option(chess_position) = 
-        if (pos.number - i) < 1 then {none} else {some = {pos with number = pos.number-i}}
+        next_pos = {pos with number = pos.number-i}
+        if (pos.number - i) < 1 then {none} else {some = next_pos}
 
     right_inclusive(pos: chess_position,board: board,i: int): list(chess_position) =
-        inclusive(pos,i,board,right(_,_,_),[])
+        inclusive(pos,i,board,right_option(_,_,_),[])
 
     left_inclusive(pos: chess_position,board: board,i: int): list(chess_position) =
-        inclusive(pos,i,board,left(_,_,_),[])
+        inclusive(pos,i,board,left_option(_,_,_),[])
 
     up_inclusive(pos: chess_position,board: board,i: int): list(chess_position) =
-        inclusive(pos,i,board,up(_,_,_),[])
+        inclusive(pos,i,board,up_option(_,_,_),[])
         
     down_inclusive(pos: chess_position,board: board,i: int): list(chess_position) =
-        inclusive(pos,i,board,down(_,_,_),[])
+        inclusive(pos,i,board,down_option(_,_,_),[])
 
     diagonal(direction, pos, board): list(chess_position) = 
         rec r(pos: chess_position,i,acc) = match i with
             | 0 -> acc
             | x -> 
                 p = match direction with
-                    | {left_up}    -> up(pos,board,1) |> Option.bind( p -> left(p,board,1),_)
-                    | {left_down}  -> down(pos,board,1) |> Option.bind( p-> left(p,board,1),_)
-                    | {right_up}   -> up(pos,board,1) |> Option.bind( p -> right(p,board,1),_) 
-                    | {right_down} -> down(pos,board,1) |> Option.bind( p -> right(p,board,1),_)
+                    | {left_up}    -> up(pos,board,1) |> Option.bind( p -> left_option(p,board,1),_)
+                    | {left_down}  -> down(pos,board,1) |> Option.bind( p-> left_option(p,board,1),_)
+                    | {right_up}   -> up(pos,board,1) |> Option.bind( p -> right_option(p,board,1),_) 
+                    | {right_down} -> down(pos,board,1) |> Option.bind( p -> right_option(p,board,1),_)
                 match p with 
                     | {none} -> acc
                     | {some = p} -> r(p,i-1,[p|acc])
@@ -130,6 +145,6 @@ Position = {{
                 ): list(chess_position) = match i with
         | 0 -> acc
         | x -> match f(pos,board,1) with
-            | {none} -> acc // fail fast. can't jump over 
-            | {some = p} -> inclusive(p,i-1,board,f,[p|acc])
+            | {none}  -> acc 
+            | ~{some} -> inclusive(some,i-1,board,f,[some|acc])
 }}

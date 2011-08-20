@@ -56,7 +56,8 @@ Board = {{
 
     update(board: board) = place_pieces(board)
     
-    /* Given a row, column, board it will return some with a chess position if there is a 
+    /* 
+     * Given a row, column, board it will return some with a chess position if there is a 
      * piece at the position _and_ it's of the proper color 
      */    
     piece_at(row,column,board): option(chess_position) =
@@ -68,6 +69,19 @@ Board = {{
                 | _ -> {none}
     )
     
+    /*
+     *
+     */
+    has_piece(board: board, row: int, column: string): bool = 
+    (
+        Map.get(column, board.chess_positions) 
+            |> Option.get(_) 
+            |> Map.get(row, _) 
+            |> Option.get(_) 
+            |> pos -> Option.is_some(pos.piece)
+    )
+        
+
     unbind(row,column,td,board): void = Dom.unbind_event(td,{click})
         
     add_on_click_events(row,column,td,board: board): void = 
