@@ -34,6 +34,7 @@ Board = {{
     (
         do iteri(board, [colorize(_,_,_,_), labelize(_,_,_,_)])
         do place_pieces(board)
+        do update_counters(board)
         void
     )
 
@@ -54,7 +55,27 @@ Board = {{
         void
     )
 
-    update(board: board) = place_pieces(board)
+    update(board: board) = 
+    (
+        do place_pieces(board)
+        do update_counters(board)
+        void
+    )
+    
+    update_counters(board: board) = 
+    (
+        (blacks,whites) = Map.To.val_list(board.chess_positions) 
+            |> List.collect(Map.To.val_list(_),_) 
+            |> List.fold(pos,acc -> (
+                    (whites,blacks) = acc
+                    match pos.piece with
+                        | { some = ~{color kind}} -> if color == {white} then (whites+1,blacks) else (whites,blacks+1)
+                        | {none} -> acc
+               ), _, (0,0)) 
+        do Dom.set_text(#black_left, Int.to_string(blacks))
+        do Dom.set_text(#white_left, Int.to_string(whites))
+        void
+    )
     
     /* 
      * Given a row, column, board it will return some with a chess position if there is a 
@@ -158,7 +179,7 @@ Board = {{
             Map.replace(posTo.number, (oldPos -> { oldPos with piece = posFrom.piece}), rows)
         ), chess_positions)
         { chess_positions = chess_positions2 current_color = next_color }
-     )   
+     )
     
     /* 
         Method for applying a list of functions on every td dom element in the board. 

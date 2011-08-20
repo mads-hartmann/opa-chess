@@ -4,6 +4,7 @@
             <li>Current player: <span id="color_of_current_player"></span></li>
             <li>You're: <span id="color_of_player"></span></li>
             <li>Name of the game: <span id="name_of_game"></span></li>
+            <li>Pieces: w:<span id="black_left"></span> b:<span id="white_left"></span></li>
         </ul>
     </div>
     <table border="0" cellspacing="5" cellpadding="5">
