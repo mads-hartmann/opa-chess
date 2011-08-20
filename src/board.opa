@@ -28,6 +28,9 @@ Board = {{
         user and the channel to use. 
     */
     user_color()    = Option.get(Game.get_state()).color
+    opposite_color() = match user_color() with 
+        | {white} -> {black}
+        | {black} -> {white}
     channel()       = Option.get(Game.get_state()).channel
         
     prepare(board: board): void = 
@@ -59,7 +62,34 @@ Board = {{
     (
         do place_pieces(board)
         do update_counters(board)
-        void
+        if opposite_king_is_dead(board) then (
+            Dom.set_text(#status, "You've won!")
+        ) else if your_king_is_dead(board) then (
+            Dom.set_text(#status, "You've lost!")
+        )
+        else void
+    )
+    
+    opposite_king_is_dead(board: board): bool = 
+    (
+        Map.To.val_list(board.chess_positions) 
+            |> List.collect(Map.To.val_list(_),_) 
+            |> List.fold(pos,acc -> (
+                match pos.piece with
+                    | { some = {color = c kind = {king}}} -> if c != user_color() then false else acc
+                    | _ -> acc
+            ), _, true)
+    )
+    
+    your_king_is_dead(board): bool = 
+    (
+        Map.To.val_list(board.chess_positions) 
+            |> List.collect(Map.To.val_list(_),_) 
+            |> List.fold(pos,acc -> (
+                match pos.piece with
+                    | { some = {color = c kind = {king}}} -> if c == user_color() then false else acc
+                    | _ -> acc
+            ), _, true)        
     )
     
     update_counters(board: board) = 
