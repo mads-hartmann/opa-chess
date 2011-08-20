@@ -28,102 +28,108 @@ Position = {{
     (
         xs = match piece.kind with
             | {king}   -> 
-                [right(pos,1),left(pos,1),up(pos,1),down(pos,1),
-                 right(pos,1) |> Option.bind( p -> up(p,1) ,_),
-                 right(pos,1) |> Option.bind( p -> down(p,1) ,_),
-                 left(pos,1) |> Option.bind( p -> up(p,1) ,_),
-                 left(pos,1) |> Option.bind( p -> down(p,1) ,_)]
+                [right(pos,board,1),left(pos,board,1),up(pos,board,1),down(pos,board,1),
+                 right(pos,board,1) |> Option.bind( p -> up(p,board,1) ,_),
+                 right(pos,board,1) |> Option.bind( p -> down(p,board,1) ,_),
+                 left(pos,board,1)  |> Option.bind( p -> up(p,board,1) ,_),
+                 left(pos,board,1)  |> Option.bind( p -> down(p,board,1) ,_)]
             | {queen}  -> 
-                (diagonal({left_up},pos)  ++ diagonal({left_down},pos) ++ 
-                 diagonal({right_up},pos) ++ diagonal({right_down},pos) ++
-                 right_inclusive(pos,7)   ++ left_inclusive(pos,7) ++
-                 up_inclusive(pos,7)      ++ down_inclusive(pos,7)) |> 
+                (diagonal({left_up},pos,board)  ++ diagonal({left_down},pos,board) ++ 
+                 diagonal({right_up},pos,board) ++ diagonal({right_down},pos,board) ++
+                 left_inclusive(pos,board,7) ++
+                 right_inclusive(pos,board,7)   ++ 
+                 up_inclusive(pos,board,7)      ++ down_inclusive(pos,board,7)) |> 
                 List.map( x -> { some = x}, _)
             | {rook}   ->
                 List.flatten([
-                    right_inclusive(pos,7),
-                    left_inclusive(pos,7),
-                    up_inclusive(pos,7),
-                    down_inclusive(pos,7)]) |> 
+                    right_inclusive(pos,board,7),
+                    left_inclusive(pos,board,7),
+                    up_inclusive(pos,board,7),
+                    down_inclusive(pos,board,7)]) |> 
                 List.map( x -> { some = x}, _)
             | {bishop} -> 
                 List.flatten([
-                    diagonal({left_up},pos),
-                    diagonal({left_down},pos),
-                    diagonal({right_up},pos),
-                    diagonal({right_down},pos)]) |> 
+                    diagonal({left_up},pos,board),
+                    diagonal({left_down},pos,board),
+                    diagonal({right_up},pos,board),
+                    diagonal({right_down},pos,board)]) |> 
                 List.map( x -> { some = x}, _)
             | {knight} -> 
-                [right(pos,1) |> Option.bind( p -> down(p,2),_),
-                 right(pos,1) |> Option.bind( p -> up(p,2),_),
-                 left(pos,1) |> Option.bind(p -> down(p,2),_),
-                 left(pos,1) |> Option.bind(p -> up(p,2),_),
-                 up(pos,1) |> Option.bind( p -> left(p,2),_),
-                 up(pos,1) |> Option.bind( p -> right(p,2),_),
-                 down(pos,1) |> Option.bind(p -> left(p,2),_),
-                 down(pos,1) |> Option.bind(p -> right(p,2),_)]
+                [right(pos,board,1) |> Option.bind( p -> down(p,board,2),_),
+                 right(pos,board,1) |> Option.bind( p -> up(p,board,2),_),
+                 left(pos,board,1) |> Option.bind(p -> down(p,board,2),_),
+                 left(pos,board,1) |> Option.bind(p -> up(p,board,2),_),
+                 up(pos,board,1) |> Option.bind( p -> left(p,board,2),_),
+                 up(pos,board,1) |> Option.bind( p -> right(p,board,2),_),
+                 down(pos,board,1) |> Option.bind(p -> left(p,board,2),_),
+                 down(pos,board,1) |> Option.bind(p -> right(p,board,2),_)]
             | {pawn}   -> 
                 if user_color == {white} then
                     if pos.number == 2 then
-                        up_inclusive(pos,2) |> List.map( x -> { some = x}, _)
+                        up_inclusive(pos,board,2) |> List.map( x -> { some = x}, _)
                     else
-                        [up(pos,1)]
+                        [up(pos,board,1)]
                 else 
                     if pos.number == 7 then
-                        down_inclusive(pos,2) |> List.map( x -> { some = x}, _)
+                        down_inclusive(pos,board,2) |> List.map( x -> { some = x}, _)
                     else
-                        [down(pos,1)]                    
+                        [down(pos,board,1)]                    
         List.filter_map( x -> x , xs)
     )
     /*
         Helper functions. 
     */
     
-    right(pos,i): option(chess_position) = 
+    right(pos: chess_position,board: board,i: int): option(chess_position) = 
         x = Column.to_int(pos.letter)
         l = Column.from_int(x+i)
         if (x+i) > 72 then {none} else {some = {pos with letter = l}}
     
-    left(pos,i): option(chess_position) = 
+    left(pos: chess_position,board: board,i: int): option(chess_position) = 
         x = Column.to_int(pos.letter)
         l = Column.from_int(x-i)
         if (x-i) < 65 then {none} else {some = {pos with letter = l}}
             
-    up(pos,i): option(chess_position) =             
+    up(pos: chess_position,board: board,i: int): option(chess_position) = 
         if (pos.number + i) > 8 then {none} else {some = {pos with number = pos.number+i}}
                                                      
-    down(pos,i): option(chess_position) =        
+    down(pos: chess_position,board: board,i: int): option(chess_position) = 
         if (pos.number - i) < 1 then {none} else {some = {pos with number = pos.number-i}}
 
-    right_inclusive(pos: chess_position,i: int): list(chess_position) =
-        inclusive(pos,i,right(_,_),[])
+    right_inclusive(pos: chess_position,board: board,i: int): list(chess_position) =
+        inclusive(pos,i,board,right(_,_,_),[])
 
-    left_inclusive(pos: chess_position,i: int): list(chess_position) =
-        inclusive(pos,i,left(_,_),[])
+    left_inclusive(pos: chess_position,board: board,i: int): list(chess_position) =
+        inclusive(pos,i,board,left(_,_,_),[])
 
-    up_inclusive(pos: chess_position,i: int): list(chess_position) =
-        inclusive(pos,i,up(_,_),[])
+    up_inclusive(pos: chess_position,board: board,i: int): list(chess_position) =
+        inclusive(pos,i,board,up(_,_,_),[])
         
-    down_inclusive(pos: chess_position,i: int): list(chess_position) =
-        inclusive(pos,i,down(_,_),[])
+    down_inclusive(pos: chess_position,board: board,i: int): list(chess_position) =
+        inclusive(pos,i,board,down(_,_,_),[])
 
-    diagonal(direction: direction, pos: chess_position): list(chess_position) = 
+    diagonal(direction, pos, board): list(chess_position) = 
         rec r(pos: chess_position,i,acc) = match i with
             | 0 -> acc
             | x -> 
                 p = match direction with
-                    | {left_up}    -> up(pos,1) |> Option.bind( p -> left(p,1),_)
-                    | {left_down}  -> down(pos,1) |> Option.bind( p-> left(p,1),_)
-                    | {right_up}   -> up(pos,1) |> Option.bind( p -> right(p,1),_) 
-                    | {right_down} -> down(pos,1) |> Option.bind( p -> right(p,1),_)
+                    | {left_up}    -> up(pos,board,1) |> Option.bind( p -> left(p,board,1),_)
+                    | {left_down}  -> down(pos,board,1) |> Option.bind( p-> left(p,board,1),_)
+                    | {right_up}   -> up(pos,board,1) |> Option.bind( p -> right(p,board,1),_) 
+                    | {right_down} -> down(pos,board,1) |> Option.bind( p -> right(p,board,1),_)
                 match p with 
                     | {none} -> acc
                     | {some = p} -> r(p,i-1,[p|acc])
         r(pos,7,[])
 
-    inclusive(pos, i, f, acc): list(chess_position) = match i with
+    inclusive(pos: chess_position, 
+                i: int, 
+            board: board, 
+                f: chess_position, board, int -> option(chess_position), 
+              acc: list(chess_position)
+                ): list(chess_position) = match i with
         | 0 -> acc
-        | x -> match f(pos,1) with
+        | x -> match f(pos,board,1) with
             | {none} -> acc // fail fast. can't jump over 
-            | {some = p} -> inclusive(p,i-1,f,[p|acc])
+            | {some = p} -> inclusive(p,i-1,board,f,[p|acc])
 }}
