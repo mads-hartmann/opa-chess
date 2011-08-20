@@ -82,7 +82,7 @@ Board = {{
                      do Dom.select_raw("td.movable")  |> Dom.remove_class(_,"movable")
                      do Dom.select_raw("td.selected") |> Dom.remove_class(_,"selected")
                      do Dom.add_class(td, "selected")
-                     highlight_possible_movements(pos, Option.get(pos.piece))
+                     highlight_possible_movements(board, pos, Option.get(pos.piece))
                  ) else if Dom.has_class(td,"movable") then 
                  (
                     posFrom  = Dom.select_raw("td.selected") |> Position.chess_position_from_dom(_, board)
@@ -98,9 +98,9 @@ Board = {{
         void
     )
     
-    highlight_possible_movements(pos: chess_position, piece: piece): void = 
+    highlight_possible_movements(board: board, pos: chess_position, piece: piece): void = 
     (
-        do Position.movable_chess_positions(pos,piece,user_color()) |> List.iter(pos -> 
+        do Position.movable_chess_positions(pos,piece,user_color(),board) |> List.iter(pos -> 
             movable = Position.select_chess_position(pos)
             Dom.add_class(movable,"movable")
         ,_)

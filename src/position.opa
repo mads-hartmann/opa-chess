@@ -13,16 +13,19 @@ type chess_position = {letter: string ; number: int ; piece: option(piece) }
 Position = {{
 
     chess_position_from_dom(dom: dom, board): chess_position = 
+    (
         // Very hacky. The 7th and 8th chars are the colulm and row number.
         clz    = Dom.get_property(dom,"class") |> Option.get(_)
         column = String.get(6, clz)
         row    = String.get(7, clz) |> String.to_int(_)
         Map.get(column, board.chess_positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_)
-
+    )
+        
     select_chess_position(pos: chess_position): dom = 
         Dom.select_raw("." ^ pos.letter ^ Int.to_string(pos.number))
         
-    movable_chess_positions(pos: chess_position, piece: piece, user_color: colorC): list(chess_position) = (
+    movable_chess_positions(pos: chess_position, piece: piece, user_color: colorC, board: board): list(chess_position) = 
+    (
         xs = match piece.kind with
             | {king}   -> 
                 [right(pos,1),left(pos,1),up(pos,1),down(pos,1),
@@ -93,36 +96,16 @@ Position = {{
         if (pos.number - i) < 1 then {none} else {some = {pos with number = pos.number-i}}
 
     right_inclusive(pos: chess_position,i: int): list(chess_position) =
-        rec r(pos,i,acc) = match i with
-            | 0 -> acc
-            | x -> match right(pos,1) with
-                | {none} -> acc // fail fast. can't jump over 
-                | {some = p} -> r(p,i-1,[p|acc])
-        r(pos,i,[])
+        inclusive(pos,i,right(_,_),[])
 
     left_inclusive(pos: chess_position,i: int): list(chess_position) =
-        rec r(pos,i,acc) = match i with
-            | 0 -> acc
-            | x -> match left(pos,1) with
-                | {none} -> acc // fail fast. can't jump over 
-                | {some = p} -> r(p,i+1,[p|acc])
-        r(pos,i,[])
+        inclusive(pos,i,left(_,_),[])
 
     up_inclusive(pos: chess_position,i: int): list(chess_position) =
-        rec r(pos,i,acc) = match i with
-            | 0 -> acc
-            | x -> match up(pos,1) with
-                | {none} -> acc // fail fast. can't jump over 
-                | {some = p} -> r(p,i-1,[p|acc])
-        r(pos,i,[])
+        inclusive(pos,i,up(_,_),[])
         
     down_inclusive(pos: chess_position,i: int): list(chess_position) =
-        rec r(pos,i,acc) = match i with
-            | 0 -> acc
-            | x -> match down(pos,1) with
-                | {none} -> acc // fail fast. can't jump over 
-                | {some = p} -> r(p,i+1,[p|acc])
-        r(pos,i,[])
+        inclusive(pos,i,down(_,_),[])
 
     diagonal(direction: direction, pos: chess_position): list(chess_position) = 
         rec r(pos: chess_position,i,acc) = match i with
@@ -132,9 +115,15 @@ Position = {{
                     | {left_up}    -> up(pos,1) |> Option.bind( p -> left(p,1),_)
                     | {left_down}  -> down(pos,1) |> Option.bind( p-> left(p,1),_)
                     | {right_up}   -> up(pos,1) |> Option.bind( p -> right(p,1),_) 
-                    | {right_down} -> down(pos,1) |> Option.bind( p -> left(p,1),_)
+                    | {right_down} -> down(pos,1) |> Option.bind( p -> right(p,1),_)
                 match p with 
                     | {none} -> acc
                     | {some = p} -> r(p,i-1,[p|acc])
         r(pos,7,[])
+
+    inclusive(pos, i, f, acc): list(chess_position) = match i with
+        | 0 -> acc
+        | x -> match f(pos,1) with
+            | {none} -> acc // fail fast. can't jump over 
+            | {some = p} -> inclusive(p,i-1,f,[p|acc])
 }}
