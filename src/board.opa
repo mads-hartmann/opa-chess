@@ -72,15 +72,27 @@ Board = {{
     /*
      *
      */
-    has_piece(board: board, row: int, column: string): bool = 
+    has_piece_of_own_color(board: board, row: int, column: string): bool = 
     (
-        Map.get(column, board.chess_positions) 
+        Map.get(column, board.chess_positions)
             |> Option.get(_) 
             |> Map.get(row, _) 
             |> Option.get(_) 
-            |> pos -> Option.is_some(pos.piece)
+            |> pos -> match pos with 
+                | { piece = { some = {color = color kind = kind}} ...} -> color == user_color()
+                | _ -> false
     )
-        
+    
+    has_piece_of_opposite_color(board: board, row: int, column: string): bool = 
+    (
+        Map.get(column, board.chess_positions)
+            |> Option.get(_)
+            |> Map.get(row,_)
+            |> Option.get(_)
+            |> pos -> match pos with
+                | { piece = { some = {color = color kind = kind}} ...} -> color != user_color()
+                | _ -> false
+    )
 
     unbind(row,column,td,board): void = Dom.unbind_event(td,{click})
         
@@ -145,7 +157,7 @@ Board = {{
         chess_positions2 = Map.replace(posTo.letter, rows -> (
             Map.replace(posTo.number, (oldPos -> { oldPos with piece = posFrom.piece}), rows)
         ), chess_positions)
-        { chess_positions = chess_positions2 current_color = next_color}
+        { chess_positions = chess_positions2 current_color = next_color }
      )   
     
     /* 

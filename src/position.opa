@@ -76,15 +76,15 @@ Position = {{
                         [down(pos,board,1)]                    
         List.filter_map( x -> x , xs)
     )
+
     /*
         Helper functions. 
     */
-     
-     
+
     mov_opt(pos,board,i,f) =
         match f(pos,board,i) with
             | {none} -> {none}
-            | ~{some} -> if Board.has_piece(board,some.number,some.letter) then {none} else {some = some}
+            | ~{some} -> if Board.has_piece_of_own_color(board,some.number,some.letter) then {none} else {some = some}
 
     right_option(pos,board,i) = mov_opt(pos,board,i,right(_,_,_))
     left_option(pos,board,i) = mov_opt(pos,board,i,left(_,_,_))
@@ -134,7 +134,9 @@ Position = {{
                     | {right_down} -> down(pos,board,1) |> Option.bind( p -> right_option(p,board,1),_)
                 match p with 
                     | {none} -> acc
-                    | {some = p} -> r(p,i-1,[p|acc])
+                    | {some = p} -> if Board.has_piece_of_opposite_color(board, p.number, p.letter) 
+                                    then [p|acc]
+                                    else r(p,i-1,[p|acc])
         r(pos,7,[])
 
     inclusive(pos: chess_position, 
@@ -146,5 +148,7 @@ Position = {{
         | 0 -> acc
         | x -> match f(pos,board,1) with
             | {none}  -> acc 
-            | ~{some} -> inclusive(some,i-1,board,f,[some|acc])
+            | ~{some} -> if Board.has_piece_of_opposite_color(board, some.number, some.letter) 
+                         then [some|acc] 
+                         else inclusive(some,i-1,board,f,[some|acc])
 }}
