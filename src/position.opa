@@ -12,7 +12,7 @@ type chess_position = {letter: string ; number: int ; piece: option(piece) }
 
 Position = {{
 
-    chess_position_from_dom(dom: dom, board): chess_position = 
+    chess_position_from_dom(dom: dom, board): chess_position =
     (
         // Very hacky. The 7th and 8th chars are the colulm and row number.
         clz    = Dom.get_property(dom,"class") |> Option.get(_)
@@ -54,7 +54,7 @@ Position = {{
                     diagonal({right_up},pos,board),
                     diagonal({right_down},pos,board)]) |> 
                 List.map( x -> { some = x}, _)
-            | {knight} -> 
+            | {knight} ->
                 [right(pos,board,1) |> Option.bind( p -> down_option(p,board,2),_),
                  right(pos,board,1) |> Option.bind( p -> up_option(p,board,2),_),
                  left(pos,board,1) |> Option.bind(p -> down_option(p,board,2),_),
@@ -63,17 +63,36 @@ Position = {{
                  up(pos,board,1) |> Option.bind( p -> right_option(p,board,2),_),
                  down(pos,board,1) |> Option.bind(p -> left_option(p,board,2),_),
                  down(pos,board,1) |> Option.bind(p -> right_option(p,board,2),_)]
-            | {pawn}   -> 
+            | {pawn}   ->
                 if user_color == {white} then
-                    if pos.number == 2 then
-                        up_inclusive(pos,board,2) |> List.map( x -> { some = x}, _)
-                    else
-                        [up(pos,board,1)]
-                else 
+                    
+                    has_enemy(pos) = Board.has_piece_of_opposite_color(board,pos.number,pos.letter)
+                    
+                    f(g: chess_position -> option(chess_position),
+                     xs: list(chess_position)
+                      ): list(option(chess_position)) = (
+                          List.filter_map(g, xs) |> List.map( x -> {some = x}, _)
+                      )
+
+                    possible_movements = 
+                        if pos.number == 2     
+                        then up_inclusive(pos,board,2) 
+                        else List.filter_map(x -> x, [up(pos,board,1)])
+
+                    possible_attacks = 
+                        xs = [ up(pos,board,1) |> Option.bind( p -> right(p,board,1),_),
+                               up(pos,board,1) |> Option.bind( p -> left(p,board,1),_) ]
+                        List.filter_map(x -> x,xs)
+                    
+                    movements = f(x -> if has_enemy(x) then {none} else {some = x}, possible_movements)
+                    attacks   = f(x -> if has_enemy(x) then {some = x} else {none}, possible_attacks)
+                    
+                    movements ++ attacks
+                else
                     if pos.number == 7 then
                         down_inclusive(pos,board,2) |> List.map( x -> { some = x}, _)
                     else
-                        [down(pos,board,1)]                    
+                        [down(pos,board,1)]
         List.filter_map( x -> x , xs)
     )
 
