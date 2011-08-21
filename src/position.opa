@@ -26,74 +26,105 @@ Position = {{
         
     movable_chess_positions(pos: chess_position, piece: piece, user_color: colorC, board: board): list(chess_position) = 
     (
-        xs = match piece.kind with
-            | {king}   -> 
-                [right_option(pos,board,1),left_option(pos,board,1),up_option(pos,board,1),down_option(pos,board,1),
-                 right(pos,board,1) |> Option.bind( p -> up_option(p,board,1) ,_),
-                 right(pos,board,1) |> Option.bind( p -> down_option(p,board,1) ,_),
-                 left(pos,board,1)  |> Option.bind( p -> up_option(p,board,1) ,_),
-                 left(pos,board,1)  |> Option.bind( p -> down_option(p,board,1) ,_)]
-            | {queen}  -> 
-                (diagonal({left_up},pos,board)  ++ diagonal({left_down},pos,board) ++ 
-                 diagonal({right_up},pos,board) ++ diagonal({right_down},pos,board) ++
-                 left_inclusive(pos,board,7) ++
-                 right_inclusive(pos,board,7)   ++ 
-                 up_inclusive(pos,board,7)      ++ down_inclusive(pos,board,7)) |> 
-                List.map( x -> { some = x}, _)
-            | {rook}   ->
-                List.flatten([
-                    right_inclusive(pos,board,7),
-                    left_inclusive(pos,board,7),
-                    up_inclusive(pos,board,7),
-                    down_inclusive(pos,board,7)]) |> 
-                List.map( x -> { some = x}, _)
-            | {bishop} -> 
-                List.flatten([
-                    diagonal({left_up},pos,board),
-                    diagonal({left_down},pos,board),
-                    diagonal({right_up},pos,board),
-                    diagonal({right_down},pos,board)]) |> 
-                List.map( x -> { some = x}, _)
-            | {knight} ->
-                [right(pos,board,1) |> Option.bind( p -> down_option(p,board,2),_),
-                 right(pos,board,1) |> Option.bind( p -> up_option(p,board,2),_),
-                 left(pos,board,1) |> Option.bind(p -> down_option(p,board,2),_),
-                 left(pos,board,1) |> Option.bind(p -> up_option(p,board,2),_),
-                 up(pos,board,1) |> Option.bind( p -> left_option(p,board,2),_),
-                 up(pos,board,1) |> Option.bind( p -> right_option(p,board,2),_),
-                 down(pos,board,1) |> Option.bind(p -> left_option(p,board,2),_),
-                 down(pos,board,1) |> Option.bind(p -> right_option(p,board,2),_)]
-            | {pawn}   ->
-                if user_color == {white} then
-                    
-                    has_enemy(pos) = Board.has_piece_of_opposite_color(board,pos.number,pos.letter)
-                    
-                    f(g: chess_position -> option(chess_position),
-                     xs: list(chess_position)
-                      ): list(option(chess_position)) = (
-                          List.filter_map(g, xs) |> List.map( x -> {some = x}, _)
-                      )
+        // short-cuts. No need to explicitly pass the board all over the code. 
+        r     = right(_,board,1)
+        l     = left(_,board,1)
+        u     = up(_,board,1)
+        d     = down(_,board,1)
+        rOpt  = right_option(_,board,_)
+        lOpt  = left_option(_,board,_)
+        uOpt  = up_option(_,board,_)
+        dOpt  = down_option(_,board,_)
+        dig   = diagonal(_,pos,board)
+        rIncl = right_inclusive(pos,board,_)
+        lIncl = left_inclusive(pos,board,_)
+        uIncl = up_inclusive(pos,board,_)
+        dIncl = down_inclusive(pos,board,_)
+        
+        has_enemy(pos) = Board.has_piece_of_opposite_color(board,pos.number,pos.letter)
+        cant_kill(pos) = if has_enemy(pos) then {none} else {some = pos}
+        
+        // would've named then 'andThen' but you can't have chars in infix functions. 
+        `<*>` = p,q -> Option.bind( x -> q(x),p)
+        
+        king_movements = 
+            [rOpt(pos,1), 
+             lOpt(pos,1), 
+             uOpt(pos,1), 
+             dOpt(pos,1), 
+             r(pos) <*> uOpt(_,1), 
+             r(pos) <*> dOpt(_,1), 
+             l(pos) <*> uOpt(_,1), 
+             l(pos) <*> dOpt(_,1)]
+        
+        knight_movements = 
+            [r(pos) <*> dOpt(_,2), 
+             r(pos) <*> uOpt(_,2), 
+             l(pos) <*> dOpt(_,2), 
+             l(pos) <*> uOpt(_,2), 
+             u(pos) <*> lOpt(_,2), 
+             u(pos) <*> rOpt(_,2), 
+             d(pos) <*> lOpt(_,2), 
+             d(pos) <*> rOpt(_,2)]
 
-                    possible_movements = 
-                        if pos.number == 2     
-                        then up_inclusive(pos,board,2) 
-                        else List.filter_map(x -> x, [up(pos,board,1)])
+        bishop_movements = 
+            List.flatten(
+                [dig({left_up}),
+                 dig({left_down}),
+                 dig({right_up}),
+                 dig({right_down})
+                ]) |> List.map( x -> { some = x}, _)
+        
+        queen_movements =
+            (dig({left_up})
+             ++ dig({left_down})
+             ++ dig({right_up})
+             ++ dig({right_down})
+             ++ lIncl(7)
+             ++ rIncl(7)
+             ++ uIncl(7)
+             ++ dIncl(7)) |> List.map( x -> { some = x}, _)
 
-                    possible_attacks = 
-                        xs = [ up(pos,board,1) |> Option.bind( p -> right(p,board,1),_),
-                               up(pos,board,1) |> Option.bind( p -> left(p,board,1),_) ]
-                        List.filter_map(x -> x,xs)
+        rook_movements = 
+            List.flatten(
+                [rIncl(7), 
+                 lIncl(7), 
+                 uIncl(7), 
+                 dIncl(7)
+                ]) |> List.map( x -> { some = x}, _)
+        
+        pawn_movements = 
+        (
+            f(g: chess_position -> option(chess_position), xs: list(chess_position)): list(option(chess_position)) = 
+                List.filter_map(g, xs) |> List.map( x -> {some = x}, _)
+            
+            mov(special, movment_func_incl,movement_func) = 
+            (
+                possible_movements = 
+                    if pos.number == special
+                    then movment_func_incl(2) |> List.filter_map(cant_kill(_),_)
+                    else List.filter_map(x -> x, [movement_func(pos)]) |> List.filter_map(cant_kill(_),_)
+
+                possible_attacks = (
+                    xs = [ movement_func(pos) <*> r, movement_func(pos) <*> l ]
+                    List.filter_map(x -> x,xs))
                     
-                    movements = f(x -> if has_enemy(x) then {none} else {some = x}, possible_movements)
-                    attacks   = f(x -> if has_enemy(x) then {some = x} else {none}, possible_attacks)
-                    
-                    movements ++ attacks
-                else
-                    if pos.number == 7 then
-                        down_inclusive(pos,board,2) |> List.map( x -> { some = x}, _)
-                    else
-                        [down(pos,board,1)]
-        List.filter_map( x -> x , xs)
+                movements = f(x -> if has_enemy(x) then {none} else {some = x}, possible_movements)
+                attacks   = f(x -> if has_enemy(x) then {some = x} else {none}, possible_attacks)
+
+                movements ++ attacks
+            )
+            
+            if user_color == {white} then mov(2,uIncl,u) else mov(7,dIncl,d)
+        )
+        
+        (match piece.kind with
+            | {king}   -> king_movements
+            | {knight} -> knight_movements
+            | {bishop} -> bishop_movements
+            | {queen}  -> queen_movements
+            | {rook}   -> rook_movements
+            | {pawn}   -> pawn_movements) |> List.filter_map( x -> x , _)
     )
 
     /*
