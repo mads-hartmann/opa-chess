@@ -63,6 +63,7 @@ Game = {{
                 do Network.broadcast({ joining = user},channel) 
                 do /game[name] <- some(g)
                 do UserContext.change(( _ -> { some = { game = name color = {black} channel = channel }}), user_state)
+                do User.update({ user with games = user.games + 1})
                 { success = g}
             | { none } -> { failure = ["No such game exists."] }
     
@@ -77,6 +78,7 @@ Game = {{
                     channel = NetworkWrapper.memo(name): Network.network(message)
                     do /game[name] <- some(game)
                     do UserContext.change(( _ -> { some = { game = name color = {white} channel = channel }}), user_state)
+                    do User.update({ user with games = user.games + 1})
                     { success = game }
                 )
             )
