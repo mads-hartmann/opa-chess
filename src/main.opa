@@ -158,18 +158,20 @@ lobby() = User.withUser( user -> (
     )
 ), login())
 
+
 /* Message received about the state of the game. */
 @client message_recieved(msg: message) = 
     match msg with 
         | { joining = user } -> Dom.hide(#waiting)
         | { state   = board } ->
-            do Board.update(board)
             do Dom.transform([#color_of_current_player <- colorc_to_string(board.current_color)])
-            if Option.get(Game.get_state()).color == board.current_color then
+            do if Option.get(Game.get_state()).color == board.current_color then
                 Dom.hide(#waiting)
             else
                 do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for " ^ colorc_to_string(board.current_color))
                 Dom.show(#waiting)
+             Board.update(board)
+            
 
 @client when_ready(name,color): void = (
     channel  = Option.get(Game.get_state()).channel
@@ -177,7 +179,6 @@ lobby() = User.withUser( user -> (
     do Dom.set_text(#name_of_game, name)
     do Dom.set_text(#color_of_current_player, colorc_to_string({white}))
     do Network.observe(message_recieved, channel)
-    
     do Option.iter( state -> (
         if state.color == {white} then 
             Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for black player")
@@ -196,9 +197,11 @@ boardgame(name: string) = (
                 | { some = game } -> (
                     
                     xml = color -> 
+                        <div onready={_ -> Network.add_callback(game_finished_recieved, game_observer)}>
                         <div onready={_ -> when_ready(name,color) } class="game">
                             {Chat.create_with_channel(user.name, NetworkWrapperChat.memo(game.name ^ "_chat"))}
                             {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
+                        </div>
                         </div>
 
                     if (Option.get(game.white) == user) then 

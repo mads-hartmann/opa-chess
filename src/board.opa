@@ -27,11 +27,8 @@ Board = {{
         User-specific information related to one specific board. The color of the current 
         user and the channel to use. 
     */
-    user_color()    = Option.get(Game.get_state()).color
-    opposite_color() = match user_color() with 
-        | {white} -> {black}
-        | {black} -> {white}
-    channel()       = Option.get(Game.get_state()).channel
+    user_color() = Option.get(Game.get_state()).color
+    channel()    = Option.get(Game.get_state()).channel
         
     prepare(board: board): void = 
     (
@@ -63,11 +60,10 @@ Board = {{
         do place_pieces(board)
         do update_counters(board)
         if opposite_king_is_dead(board) then (
-            Dom.set_text(#status, "You've won!")
+            Network.broadcast({ winner = user_color()}, game_observer)
         ) else if your_king_is_dead(board) then (
-            Dom.set_text(#status, "You've lost!")
-        )
-        else void
+            Network.broadcast({ winner = user_color() |> opposite_color(_) }, game_observer)
+        ) else void
     )
     
     opposite_king_is_dead(board: board): bool = 

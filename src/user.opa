@@ -13,7 +13,14 @@ import stdlib.web.client
 db /user: stringmap(option(user))
 db /user[_] = none
 
-type user = { name: string ; email: string ; password: string }
+type user = { 
+    name: string ; 
+    email: string ; 
+    password: string 
+    games: int; 
+    wins: int; 
+    losses: int; 
+}
 
 type User.status = { user: user } / { unlogged }
 
@@ -57,10 +64,17 @@ User = {{
                 ]
                 match List.fold(validator, xs, []) with 
                     | [] -> 
-                        u = { name = username email = email password = password }
+                        u = { name     = username 
+                              email    = email 
+                              password = password 
+                              games    = 0 
+                              wins     = 0 
+                              losses   = 0}
                         do /user[username] <- Option.some(u)
                         do UserContext.change(( _ -> {user = u}), state)
                         { success = u }
                     | { hd = x tl = xs} -> { failure = [x|xs] }
             )
+    
+    update(user): void = /user[user.name] <- { some = user }
 }}

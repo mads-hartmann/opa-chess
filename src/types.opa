@@ -14,7 +14,6 @@ type piece          = {kind: kind ; color: colorC}
 
 type direction      = {left_up} / {left_down} / {right_up} / {right_down}
 
-
 type message = {joining: user} / {state: board}
 
 /*
@@ -36,7 +35,7 @@ create_int_map(xs: list((int,'a))): intmap('a) =
 colorc_to_string = 
     | {white} -> "white"
     | {black} -> "black"
-
+    
 opposite_color = 
     | {white} -> {black}
     | {black} -> {white}

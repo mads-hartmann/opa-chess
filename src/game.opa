@@ -8,6 +8,30 @@
 
 package chess
 
+/*
+    Network for recording stats when a game is finished. I'm using this so it'll be 
+    possible to update the win/losses count of a player inside a method tagged as client. 
+*/
+
+type game_finished = { winner: colorC }
+
+@publish game_observer = Network.cloud("game_observer") : Network.network(game_finished) 
+
+game_finished_recieved(game_finished) = User.withUser( user -> 
+    if game_finished.winner == Option.get(Game.get_state()).color then 
+        do User.update({ user with wins = user.wins+1})
+        do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "You've won!")
+        Dom.show(#waiting)
+    else 
+        do User.update({ user with losses = user.losses+1})
+        do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "You've lost!")
+        Dom.show(#waiting)
+, void)
+
+/*
+    Game module and related db 
+*/
+
 db /game: stringmap(option(game))
 db /game[_] = none 
 
