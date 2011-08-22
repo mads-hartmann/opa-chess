@@ -33,8 +33,10 @@ Chat = {{
         
         <div class="chat">
             <ul id="chat_messages" onready={_ -> Network.add_callback(user_update, channel)}></ul>
+            <div class="input">
                 <input id=#entry onnewline={_ -> broadcast()} placeholder="Message..." />
-            <div class="button" onclick={_ -> broadcast()}>Post</>
+                <div class="button" onclick={_ -> broadcast()}>Post</>
+            </div>
         </div>
     )
 

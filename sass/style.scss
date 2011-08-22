@@ -177,20 +177,73 @@ body {
     }
 }
 
-#board {
-    width: 750px;
-    height: 750px;
-    background: url("/resources/board-bg.png") 0px 0px no-repeat;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-top: -375px;
-    margin-left: -375px;
+/*
+    The game view
+*/
+
+.game {
     
-    table {
-        margin-left: $brick_dimensions;
+    $sidebar-width: 300px;
+    
+    .chat {
+        position  : absolute;
+        left      : 0px;
+        top       : 0px;
+        background: #9D9D9D;
+        bottom    : 0px;
+        width     : $sidebar-width;
+        height    : 100%;
+        
+        .input {
+            position: absolute;
+            bottom  : 10px;
+        }
+    }
+    
+    #board {
+        position   : absolute;
+        left       : $sidebar-width;
+        height     : 100%;
+        top        : 0%;
+        right: 0%;
+
+        .wood {
+            position   : relative;
+            left       : 50%;
+            width      : 600px;
+            height     : 600px;
+            margin-left: -330px;
+            padding    : 30px;
+            background : url("/resources/board-bg.png") 0px 0px no-repeat;
+        }
+    }
+    
+    #waiting {
+        z-index   :1;
+        position  : absolute;
+        width     : 100%;
+        height    : 100%;
+        top       : 0px;
+        background: rgba(0, 0, 0, 0.5);
+
+        h1 {
+            text-align : center;
+            color      : #fff;
+            font-size  : 42px;
+            height     : 200px;
+            width      : 400px;
+            top        : 50%;
+            left       : 50%;
+            position   : absolute;
+            margin-top : -100px;
+            margin-left: -200px;
+        }
     }
 }
+
+/*
+    End of game view
+*/
 
 td, th {
     text-align: center;
@@ -257,32 +310,6 @@ td, th {
 }
 
 .button {display: inline-block;}
-
-/*
-  Board styling 
-*/
-
-#waiting {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0px;
-  left: 0px;
-  background: rgba(0, 0, 0, 0.5);
-  
-  h1 {
-    text-align: center;
-    color: #fff;
-    font-size: 42px;
-    height: 200px;
-    width: 400px;
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    margin-top: -100px;
-    margin-left: -200px;
-  }
-}
 
 /*
     iPhone styles

@@ -196,9 +196,9 @@ boardgame(name: string) = (
                 | { some = game } -> (
                     
                     xml = color -> 
-                        <div onready={_ -> when_ready(name,color) }>
-                            {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
+                        <div onready={_ -> when_ready(name,color) } class="game">
                             {Chat.create_with_channel(user.name, NetworkWrapperChat.memo(game.name ^ "_chat"))}
+                            {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
                         </div>
 
                     if (Option.get(game.white) == user) then 

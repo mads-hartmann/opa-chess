@@ -287,40 +287,86 @@ body {
   color: #fff;
 }
 
-/* line 180, ../sass/style.scss */
-#board {
-  width: 750px;
-  height: 750px;
-  background: url("/resources/board-bg.png") 0px 0px no-repeat;
+/*
+    The game view
+*/
+/* line 188, ../sass/style.scss */
+.game .chat {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  margin-top: -375px;
-  margin-left: -375px;
+  left: 0px;
+  top: 0px;
+  background: #9D9D9D;
+  bottom: 0px;
+  width: 300px;
+  height: 100%;
 }
-/* line 190, ../sass/style.scss */
-#board table {
-  margin-left: 75px;
+/* line 197, ../sass/style.scss */
+.game .chat .input {
+  position: absolute;
+  bottom: 10px;
+}
+/* line 203, ../sass/style.scss */
+.game #board {
+  position: absolute;
+  left: 300px;
+  height: 100%;
+  top: 0%;
+  right: 0%;
+}
+/* line 210, ../sass/style.scss */
+.game #board .wood {
+  position: relative;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  margin-left: -330px;
+  padding: 30px;
+  background: url("/resources/board-bg.png") 0px 0px no-repeat;
+}
+/* line 221, ../sass/style.scss */
+.game #waiting {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  background: rgba(0, 0, 0, 0.5);
+}
+/* line 229, ../sass/style.scss */
+.game #waiting h1 {
+  text-align: center;
+  color: #fff;
+  font-size: 42px;
+  height: 200px;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  margin-top: -100px;
+  margin-left: -200px;
 }
 
-/* line 195, ../sass/style.scss */
+/*
+    End of game view
+*/
+/* line 248, ../sass/style.scss */
 td, th {
   text-align: center;
   width: 75px;
   height: 75px;
 }
 
-/* line 201, ../sass/style.scss */
+/* line 254, ../sass/style.scss */
 .selected {
   background: green;
 }
 
-/* line 205, ../sass/style.scss */
+/* line 258, ../sass/style.scss */
 .movable {
   background: orange;
 }
 
-/* line 210, ../sass/style.scss */
+/* line 263, ../sass/style.scss */
 .hidden {
   display: none;
 }
@@ -328,7 +374,7 @@ td, th {
 /*
   forms 
 */
-/* line 218, ../sass/style.scss */
+/* line 271, ../sass/style.scss */
 .error_container {
   background: #b30a0a;
   margin: 20px 0px;
@@ -336,24 +382,24 @@ td, th {
   border: 2px solid black;
   color: white;
 }
-/* line 225, ../sass/style.scss */
+/* line 278, ../sass/style.scss */
 .error_container ul {
   text-align: left;
   padding-left: 20px;
   list-style: disc;
 }
 
-/* line 232, ../sass/style.scss */
+/* line 285, ../sass/style.scss */
 .no_errors {
   display: none;
 }
 
-/* line 236, ../sass/style.scss */
+/* line 289, ../sass/style.scss */
 .has_errors {
   display: block;
 }
 
-/* line 240, ../sass/style.scss */
+/* line 293, ../sass/style.scss */
 .button, input[type=submit] {
   width: auto;
   padding: 9px 15px;
@@ -369,44 +415,18 @@ td, th {
   -khtml-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 250, ../sass/style.scss */
+/* line 303, ../sass/style.scss */
 .button:hover, input[type=submit]:hover {
   background: #617794;
 }
-/* line 254, ../sass/style.scss */
+/* line 307, ../sass/style.scss */
 .button:active, input[type=submit]:active {
   background: #6177CD;
 }
 
-/* line 259, ../sass/style.scss */
+/* line 312, ../sass/style.scss */
 .button {
   display: inline-block;
-}
-
-/*
-  Board styling 
-*/
-/* line 265, ../sass/style.scss */
-#waiting {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0px;
-  left: 0px;
-  background: rgba(0, 0, 0, 0.5);
-}
-/* line 273, ../sass/style.scss */
-#waiting h1 {
-  text-align: center;
-  color: #fff;
-  font-size: 42px;
-  height: 200px;
-  width: 400px;
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  margin-top: -100px;
-  margin-left: -200px;
 }
 
 /*
