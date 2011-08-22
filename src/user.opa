@@ -91,19 +91,62 @@ User = {{
         View related functions 
     */
     
-    page(user) = 
+    login_view() = 
     (
-        Resource.styled_page("Chess", style,
-            <div class="container">
-                <div class="content">
-                    <h1>{user.name}</h1>
-                    <ul>
-                        <li>Games: {user.games}</li>
-                        <li>Wins: {user.wins}</li>
-                        <li>Losses: {user.losses}</li>
-                    </ul>
-                </div>
-            </div>
+        attempt_login() = 
+            username = Dom.get_value(#username)
+            password = Dom.get_value(#password)
+            match User.login(username, password) with 
+                | {true}  -> Client.goto("/")
+                | {false} -> 
+                    do Page.show_error(["Wrong combination"])
+                    Dom.give_focus(#username)
+
+        Page.default({ some = "login"},
+            <ul onready={ _ -> Dom.give_focus(#username) }>
+                <li><input id=#username placeholder="Username"/></li>
+                <li><input id=#password placeholder="Password" type="password" onnewline={ _ -> attempt_login() }/></li>
+                <li><input type="submit" value="Login" onclick={ _ -> attempt_login() } /></li>
+            </ul>
+        )
+    )
+    
+    signup_view() = Page.default( {some = "signup"}, 
+        <ul>
+            <li>
+                <label>Username</label>
+                <input id=#username type="text" />
+            </li>
+            <li>
+                <label>Email</label>
+                <input id=#email type="text" />
+            </li>
+            <li>
+                <label>Password</label>
+                <input id=#password type="text" />
+            </li>
+            <li>
+                <input type="submit" value="Sign up" onclick={ _ -> 
+                    username = Dom.get_value(#username)
+                    email    = Dom.get_value(#email)
+                    password = Dom.get_value(#password)
+                    match User.create(username, email, password) with 
+                        | {success = user } -> Client.goto("/")
+                        | {failure = failure } -> Page.show_error(failure)                            
+                } />
+            </li>
+        </ul>
+    )
+    
+    page_view(user) = 
+    (
+        Page.default({ some = "user" },
+            <h1>{user.name}</h1>
+            <ul>
+                <li>Games: {user.games}</li>
+                <li>Wins: {user.wins}</li>
+                <li>Losses: {user.losses}</li>
+            </ul>
         )
     )
 }}
