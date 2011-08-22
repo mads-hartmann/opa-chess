@@ -16,3 +16,20 @@ NetworkWrapper = {{
     )
 
 }}
+
+NetworkWrapperChat = {{
+
+   @server networks = ServerReference.create(StringMap_empty: stringmap(Network.network(chat_message)))
+
+    memo(name: string): Network.network(chat_message) =
+    (
+        ServerReference.get(networks) |> map -> Map.get(name,map) |> x -> match x with 
+            | {some = channel} -> 
+                channel
+            | {none} ->
+                channel = Network.cloud(name)
+                do ServerReference.set(networks, StringMap_add(name, channel, map))
+                channel
+    )
+
+}}

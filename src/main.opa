@@ -92,34 +92,8 @@ singup() = Resource.styled_page("Chess", style,
     </div>
 )
 
-/*
-    Chat
-*/
-
-type chat_message = { author : string ; text : string }
-
-@publish room = Network.cloud("room") : Network.network(chat_message)
-
-user_update(x : chat_message) =
-  line = <li>
-            <span class="user">{x.author}:</span>
-            {x.text}
-        </li>
-  do Dom.transform([#chat_messages +<- line ])
-  Dom.scroll_to_bottom(#chat_messages)
-  
-broadcast(author) =
- do Network.broadcast({~author text=Dom.get_value(#entry)}, room)
- Dom.clear_value(#entry)
-
-/*
-    End of Chat
-*/
-
 lobby() = User.withUser( user -> (
-    
-    author = user.name
-    
+        
     join_back_onclick() = 
         do Dom.remove_class(#main, "hidden")
         Dom.add_class(#join,"hidden")
@@ -176,9 +150,7 @@ lobby() = User.withUser( user -> (
                         <li><a class="button" onclick={_ -> menu_join_a_game_onclick() }>Join a game</a></li>
                         <li><a class="button" onclick={_ -> User.logout()}>Logout</a></li>
                     </ul>
-                    <ul id="chat_messages" onready={_ -> Network.add_callback(user_update, room)}></ul>
-                    <input id=#entry onnewline={_ -> broadcast(author)} placeholder="Message..." />
-                    <div class="button" onclick={_ -> broadcast(author)}>Post</>
+                    { Chat.create(user.name) }
                 </div>
             </form>
         </div>
@@ -226,6 +198,7 @@ boardgame(name: string) = (
                     xml = color -> 
                         <div onready={_ -> when_ready(name,color) }>
                             {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
+                            {Chat.create_with_channel(user.name, NetworkWrapperChat.memo(game.name ^ "_chat"))}
                         </div>
 
                     if (Option.get(game.white) == user) then 
