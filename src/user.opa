@@ -25,12 +25,21 @@ type user = {
 type User.status = { user: user } / { unlogged }
 
 User = {{
-    
+
     state = UserContext.make({unlogged} : User.status)
+
+    /*
+        Data related functions 
+    */
 
     withUser(f: user -> 'a, otherwise: 'a) = match get_status() with
         | ~{user}    -> f(user)
         | {unlogged} -> otherwise
+
+    withUserNamed(name, f: user -> 'a, otherwise: -> 'a) = 
+        match /user[name] with
+            | ~{some} -> f(some)
+            | {none}-> otherwise()
 
     get_status() = 
         UserContext.execute((a -> a), state)
@@ -77,4 +86,24 @@ User = {{
             )
     
     update(user): void = /user[user.name] <- { some = user }
+    
+    /*
+        View related functions 
+    */
+    
+    page(user) = 
+    (
+        Resource.styled_page("Chess", style,
+            <div class="container">
+                <div class="content">
+                    <h1>{user.name}</h1>
+                    <ul>
+                        <li>Games: {user.games}</li>
+                        <li>Wins: {user.wins}</li>
+                        <li>Losses: {user.losses}</li>
+                    </ul>
+                </div>
+            </div>
+        )
+    )
 }}

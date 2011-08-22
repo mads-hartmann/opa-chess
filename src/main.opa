@@ -224,11 +224,12 @@ login_required( page: -> resource ) =
 
 start(uri) = 
     match uri with
-        | { path = [] ... }           -> login_required( -> lobby() )
-        | { path = ["login"] ... }    -> login()
-        | { path = ["signup"] ...}    -> singup()
-        | { path = ["game",x|xs] ...} -> login_required( -> boardgame(x) )
-        | { path = x ...}             -> fourOfour()
+        | { path = [] ... }            -> login_required( -> lobby() )
+        | { path = ["login"] ... }     -> login()
+        | { path = ["signup"] ...}     -> singup()
+        | { path = ["game",x|xs] ...}  -> login_required( -> boardgame(x) )
+        | { path = ["user", x|xs] ...} -> User.withUserNamed(x, User.page(_), fourOfour)
+        | { path = x ...}              -> fourOfour()
 
 
 /**
