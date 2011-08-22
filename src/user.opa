@@ -21,6 +21,10 @@ User = {{
     
     state = UserContext.make({unlogged} : User.status)
 
+    withUser(f: user -> 'a, otherwise: 'a) = match get_status() with
+        | ~{user}    -> f(user)
+        | {unlogged} -> otherwise
+
     get_status() = 
         UserContext.execute((a -> a), state)
 

@@ -37,6 +37,10 @@ colorc_to_string =
     | {white} -> "white"
     | {black} -> "black"
 
+opposite_color = 
+    | {white} -> {black}
+    | {black} -> {white}
+
 kind_to_string = 
     | {king}   -> "king"
     | {queen}  -> "queen"

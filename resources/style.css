@@ -67,13 +67,12 @@ footer, header, hgroup, menu, nav, section {
 /*
   Form element styling 
 */
-/* line 22, ../sass/style.scss */
+/* line 34, ../sass/style.scss */
 input, textarea {
   padding: 9px;
   border: solid 1px #E5E5E5;
   outline: 0;
   font: normal 13px/100% Verdana, Tahoma, sans-serif;
-  width: 200px;
   color: #999;
   background: white url("bg_form.png") left top repeat-x;
   background: -webkit-gradient(linear, left top, left 25, from(white), color-stop(4%, #eeeeee), to(white));
@@ -82,8 +81,9 @@ input, textarea {
   -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
   -o-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
 }
-/* line 34, ../sass/style.scss */
+/* line 38, ../sass/style.scss */
 input:hover, input:focus, textarea:hover, textarea:focus {
   border-color: #617798;
   -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
@@ -91,12 +91,12 @@ input:hover, input:focus, textarea:hover, textarea:focus {
   -o-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
 }
-/* line 39, ../sass/style.scss */
+/* line 43, ../sass/style.scss */
 input:focus, textarea:focus {
   color: #617798;
 }
 
-/* line 44, ../sass/style.scss */
+/* line 48, ../sass/style.scss */
 textarea {
   width: 400px;
   max-width: 400px;
@@ -105,22 +105,142 @@ textarea {
 }
 
 /*
-  Other
+  General Structure of things. 
 */
-/* line 55, ../sass/style.scss */
+/* line 59, ../sass/style.scss */
 body {
   margin: 0px;
   background: url("/resources/bg.jpg") repeat scroll 0% 0%;
 }
 
-/* line 60, ../sass/style.scss */
+/* line 64, ../sass/style.scss */
+.container {
+  width: 60%;
+  left: 20%;
+  margin: 0px;
+  top: 100px;
+  position: absolute;
+}
+/* line 71, ../sass/style.scss */
+.container .content {
+  overflow: hidden;
+  *zoom: 1;
+  background: #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 0px 5px black;
+}
+/* line 79, ../sass/style.scss */
+.container ul {
+  text-align: left;
+}
+/* line 83, ../sass/style.scss */
+.container input[type=submit] {
+  float: right;
+  margin-top: 20px;
+}
+/* line 88, ../sass/style.scss */
+.container#login {
+  width: 262px;
+  left: 50%;
+  margin-left: -131px;
+}
+/* line 95, ../sass/style.scss */
+.container#lobby input[type=submit] {
+  float: none;
+  margin-top: 0px;
+  width: 260px;
+}
+/* line 104, ../sass/style.scss */
+.container#create .button {
+  margin-left: 10px;
+}
+/* line 108, ../sass/style.scss */
+.container#create label {
+  width: 100px;
+  display: inline-block;
+}
+/* line 113, ../sass/style.scss */
+.container#create input {
+  width: 300px;
+}
+/* line 121, ../sass/style.scss */
+.container#lobby #main ul#menu {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  *zoom: 1;
+}
+/* line 60, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+.container#lobby #main ul#menu li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0px;
+  white-space: nowrap;
+  display: inline;
+  float: left;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+/* line 48, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+.container#lobby #main ul#menu li:first-child, .container#lobby #main ul#menu li.first {
+  padding-left: 0;
+}
+/* line 49, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+.container#lobby #main ul#menu li:last-child {
+  padding-right: 0;
+}
+/* line 50, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+.container#lobby #main ul#menu li.last {
+  padding-right: 0;
+}
+/* line 124, ../sass/style.scss */
+.container#lobby #main ul#menu li {
+  margin: 10px 0px;
+  text-align: center;
+}
+/* line 128, ../sass/style.scss */
+.container#lobby #main ul#menu li .button {
+  width: 199px;
+}
+/* line 135, ../sass/style.scss */
+.container#lobby .back {
+  display: inline-block;
+  margin: 0px 0px 10px 0px;
+  color: #000;
+  text-decoration: none;
+}
+/* line 143, ../sass/style.scss */
+.container #chat_messages {
+  padding: 9px;
+  border: solid 1px #E5E5E5;
+  outline: 0;
+  font: normal 13px/100% Verdana, Tahoma, sans-serif;
+  color: #999;
+  background: white url("bg_form.png") left top repeat-x;
+  background: -webkit-gradient(linear, left top, left 25, from(white), color-stop(4%, #eeeeee), to(white));
+  background: -moz-linear-gradient(top, white, #eeeeee 1px, white 25px);
+  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  clear: both;
+  margin-bottom: 10px;
+}
+/* line 148, ../sass/style.scss */
+.container #chat_messages .user {
+  font-weight: bold;
+}
+
+/* line 154, ../sass/style.scss */
 #status {
   height: 45px;
   padding-bottom: 30px;
   text-align: center;
   color: #fff;
 }
-/* line 66, ../sass/style.scss */
+/* line 160, ../sass/style.scss */
 #status ul {
   margin: 0;
   padding: 0;
@@ -157,17 +277,17 @@ body {
 #status ul li.last {
   padding-right: 0;
 }
-/* line 75, ../sass/style.scss */
+/* line 169, ../sass/style.scss */
 #status ul li {
   margin-left: 50px;
   float: right;
 }
-/* line 80, ../sass/style.scss */
+/* line 174, ../sass/style.scss */
 #status ul span {
   color: #fff;
 }
 
-/* line 86, ../sass/style.scss */
+/* line 180, ../sass/style.scss */
 #board {
   width: 750px;
   height: 750px;
@@ -178,94 +298,37 @@ body {
   margin-top: -375px;
   margin-left: -375px;
 }
-/* line 96, ../sass/style.scss */
+/* line 190, ../sass/style.scss */
 #board table {
   margin-left: 75px;
 }
 
-/* line 101, ../sass/style.scss */
+/* line 195, ../sass/style.scss */
 td, th {
   text-align: center;
   width: 75px;
   height: 75px;
 }
 
-/* line 107, ../sass/style.scss */
+/* line 201, ../sass/style.scss */
 .selected {
   background: green;
 }
 
-/* line 111, ../sass/style.scss */
+/* line 205, ../sass/style.scss */
 .movable {
   background: orange;
 }
 
-/*
-  login page
-*/
-/* line 120, ../sass/style.scss */
-#signup, #login, #lobby {
-  width: 400px;
-  position: absolute;
-  left: 50%;
-  margin-left: -200px;
-  top: 100px;
-  color: #000;
-}
-/* line 129, ../sass/style.scss */
-#signup .content, #login .content, #lobby .content {
-  background: #e0e0e0;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0px 0px 5px black;
-  overflow: hidden;
-  *zoom: 1;
-}
-/* line 137, ../sass/style.scss */
-#signup ul, #login ul, #lobby ul {
-  text-align: left;
-}
-/* line 141, ../sass/style.scss */
-#signup input[type=submit], #login input[type=submit], #lobby input[type=submit] {
-  float: right;
-  margin-top: 20px;
-}
-
-/* line 147, ../sass/style.scss */
-#login {
-  width: 260px;
-  margin-left: -130px;
-}
-
-/* line 153, ../sass/style.scss */
-#lobby input[type=submit] {
-  float: none;
-  margin-top: 0px;
-  width: 260px;
-}
-
-/* line 160, ../sass/style.scss */
+/* line 210, ../sass/style.scss */
 .hidden {
   display: none;
 }
 
 /*
-  create page
-*/
-/* line 170, ../sass/style.scss */
-#create label {
-  width: 100px;
-  display: inline-block;
-}
-/* line 175, ../sass/style.scss */
-#create input {
-  width: 300px;
-}
-
-/*
   forms 
 */
-/* line 185, ../sass/style.scss */
+/* line 218, ../sass/style.scss */
 .error_container {
   background: #b30a0a;
   margin: 20px 0px;
@@ -273,24 +336,24 @@ td, th {
   border: 2px solid black;
   color: white;
 }
-/* line 192, ../sass/style.scss */
+/* line 225, ../sass/style.scss */
 .error_container ul {
   text-align: left;
   padding-left: 20px;
   list-style: disc;
 }
 
-/* line 199, ../sass/style.scss */
+/* line 232, ../sass/style.scss */
 .no_errors {
   display: none;
 }
 
-/* line 203, ../sass/style.scss */
+/* line 236, ../sass/style.scss */
 .has_errors {
   display: block;
 }
 
-/* line 207, ../sass/style.scss */
+/* line 240, ../sass/style.scss */
 .button, input[type=submit] {
   width: auto;
   padding: 9px 15px;
@@ -306,16 +369,16 @@ td, th {
   -khtml-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 217, ../sass/style.scss */
+/* line 250, ../sass/style.scss */
 .button:hover, input[type=submit]:hover {
   background: #617794;
 }
-/* line 221, ../sass/style.scss */
+/* line 254, ../sass/style.scss */
 .button:active, input[type=submit]:active {
   background: #6177CD;
 }
 
-/* line 226, ../sass/style.scss */
+/* line 259, ../sass/style.scss */
 .button {
   display: inline-block;
 }
@@ -323,7 +386,7 @@ td, th {
 /*
   Board styling 
 */
-/* line 232, ../sass/style.scss */
+/* line 265, ../sass/style.scss */
 #waiting {
   position: absolute;
   width: 100%;
@@ -332,7 +395,7 @@ td, th {
   left: 0px;
   background: rgba(0, 0, 0, 0.5);
 }
-/* line 240, ../sass/style.scss */
+/* line 273, ../sass/style.scss */
 #waiting h1 {
   text-align: center;
   color: #fff;
@@ -344,24 +407,4 @@ td, th {
   position: absolute;
   margin-top: -100px;
   margin-left: -200px;
-}
-
-/*
-  Lobby styling 
-*/
-/* line 260, ../sass/style.scss */
-#lobby #menu li {
-  margin: 10px 0px;
-  text-align: center;
-}
-/* line 263, ../sass/style.scss */
-#lobby #menu li .button {
-  width: 200px;
-}
-/* line 269, ../sass/style.scss */
-#lobby .back {
-  display: inline-block;
-  margin: 0px 0px 10px 0px;
-  color: #000;
-  text-decoration: none;
 }

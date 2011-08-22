@@ -15,25 +15,29 @@
 $red: #B30A0A;
 $brick_dimensions: 75px;
 
-/*
-  Form element styling 
-*/
-
-input, textarea { 
-	padding: 9px;
+@mixin boxy() {
+    padding: 9px;
 	border: solid 1px #E5E5E5;
 	outline: 0;
 	font: normal 13px/100% Verdana, Tahoma, sans-serif;
-	width: 200px;
 	color: #999;
 	background: #FFFFFF url('bg_form.png') left top repeat-x;
 	background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));
 	background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
 	@include box-shadow(rgba(0, 0, 0, 0.1),0px, 0px, 8px);
+}
+
+/*
+  Form element styling 
+*/
+
+input, textarea { 
+	@include boxy();
+	width: 200px;
 	
 	&:hover, &:focus {
-	  border-color: #617798; 
-  	@include box-shadow(rgba(0, 0, 0, 0.15),0px, 0px, 8px);
+        border-color: #617798; 
+        @include box-shadow(rgba(0, 0, 0, 0.15),0px, 0px, 8px);
 	};
 	
 	&:focus {
@@ -49,12 +53,102 @@ textarea {
 }
 
 /*
-  Other
+  General Structure of things. 
 */
 
 body {
     margin: 0px;
     background : url("/resources/bg.jpg") repeat scroll 0% 0%;
+}
+
+.container { 
+    width   : 60%;
+    left    : 20%;
+    margin  : 0px;
+    top     : 100px;
+    position:absolute;
+    
+    .content {
+        @include clearfix;
+        background   : rgba(224, 224, 224, 1);
+        border-radius: 10px;
+        padding      : 20px;
+        box-shadow   : 0px 0px 5px black;
+    }
+
+    ul { 
+      text-align: left;
+    }
+    
+    input[type=submit] {
+        float     : right;
+        margin-top: 20px;
+    }
+    
+    &#login {
+        width      : 262px;
+        left       : 50%;
+        margin-left: -131px;
+    }
+    
+    &#lobby {
+        input[type=submit] {
+            float     : none;
+            margin-top: 0px;
+            width     : 260px;
+        }
+    }
+    
+    &#create {
+        
+        .button {
+            margin-left: 10px;
+        }
+        
+        label {
+            width  : 100px;
+            display: inline-block;
+        }
+
+        input {
+            width: 300px;
+        }
+    }
+    
+    &#lobby {
+        #main {
+            
+        ul#menu {
+                @include horizontal-list();
+                
+                li {
+                    margin    : 10px 0px;
+                    text-align: center;
+
+                    .button {
+                        width: 199px;
+                    }
+                }
+            }
+        }
+
+        .back {
+            display        : inline-block;
+            margin         : 0px 0px 10px 0px;
+            color          : #000;
+            text-decoration: none;
+        }
+    }
+    
+    #chat_messages {
+        @include boxy();
+        clear        : both;
+        margin-bottom: 10px;
+        
+        .user {
+            font-weight: bold;
+        }
+    }
 }
 
 #status {
@@ -112,70 +206,9 @@ td, th {
     background: orange;
 }
 
-/*
-  login page
-*/
-
-
-#signup, #login, #lobby {
-  
-  width: 400px;
-  position: absolute;
-  left: 50%;
-  margin-left: -200px;
-  top: 100px;
-  color: #000;
-  
-  .content {
-    background: rgba(224, 224, 224, 1);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 0px 5px black;
-    @include clearfix;
-  }
-  
-  ul { 
-    text-align: left;
-  }
-    
-  input[type=submit] {
-    float: right;
-    margin-top: 20px;
-  }
-}
-
-#login {
-  width: 260px;
-  margin-left: -130px;
-}
-
-#lobby {
-  input[type=submit] {
-    float: none;
-    margin-top: 0px;
-    width: 260px;
-  }
-}
 
 .hidden {
   display: none;
-}
-
-/*
-  create page
-*/
-
-#create {
-  
-  label {
-    width: 100px;
-    display: inline-block;
-  }
-  
-  input {
-    width: 300px;
-  }
-  
 }
 
 /*
@@ -250,28 +283,3 @@ td, th {
     margin-left: -200px;
   }
 }
-
-/*
-  Lobby styling 
-*/
-
-#lobby {
-  #menu {
-    li {
-      margin: 10px 0px;
-      text-align: center;
-      .button {
-        width: 200px;
-      }
-    }
-  }
-  
-  .back {
-    display: inline-block;
-    margin: 0px 0px 10px 0px;
-    color: #000;
-    text-decoration: none;
-  }
-  
-} 
-
