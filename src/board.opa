@@ -73,7 +73,7 @@ Board = {{
             |> List.fold(pos,acc -> (
                     (whites,blacks) = acc
                     match pos.piece with
-                        | { some = ~{color kind}} -> if color == {white} then (whites+1,blacks) else (whites,blacks+1)
+                        | { some = ~{color ...}} -> if color == {white} then (whites+1,blacks) else (whites,blacks+1)
                         | {none} -> acc
                ), _, (0,0)) 
         do Dom.set_text(#black_left, Int.to_string(blacks))
@@ -178,7 +178,7 @@ Board = {{
         column_letter = Column.from_int(column+64)
         Map.get(column_letter, board.chess_positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_) |> pos ->
             match pos with 
-                | { piece = { some = {color = color kind = kind}} ...} -> if color == user_color() then { some = pos } else {none}
+                | { piece = { some = ~{color ...}} ...} -> if color == user_color() then { some = pos } else {none}
                 | _ -> {none}
     )
     
@@ -189,7 +189,7 @@ Board = {{
             |> Map.get(row, _) 
             |> Option.get(_) 
             |> pos -> match pos with 
-                | { piece = { some = {color = color kind = kind}} ...} -> color == user_color()
+                | { piece = { some = ~{color ...}} ...} -> color == user_color()
                 | _ -> false
     )
 
@@ -200,7 +200,7 @@ Board = {{
             |> Map.get(row,_)
             |> Option.get(_)
             |> pos -> match pos with
-                | { piece = { some = {color = color kind = kind}} ...} -> color != user_color()
+                | { piece = { some = ~{color ...}} ...} -> color != user_color()
                 | _ -> false
     )
 

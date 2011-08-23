@@ -73,7 +73,6 @@ Game = {{
     
     create(name: string, user: user): outcome(game,list(string)) = 
         match /game[name] with 
-            | { some = game } -> { failure = ["A game with that name is already in progress."]}
             | { none } -> ( 
                 if String.is_empty(name) then (
                     { failure = ["The name has to be non-empty"]}
@@ -86,6 +85,7 @@ Game = {{
                     { success = game }
                 )
             )
+            | _ -> { failure = ["A game with that name is already in progress."]}
     
     /*
         View related 
@@ -94,7 +94,6 @@ Game = {{
     // Message received about the state of the game. 
     @client message_recieved(msg: message) = 
         match msg with 
-            | { joining = user } -> Dom.hide(#waiting)
             | { state   = board } ->
                 do Dom.transform([#color_of_current_player <- colorc_to_string(board.current_color)])
                 do if Option.get(Game.get_state()).color == board.current_color then
@@ -103,6 +102,7 @@ Game = {{
                     do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for " ^ colorc_to_string(board.current_color))
                     Dom.show(#waiting)
                  Board.update(board)
+            | { joining = _ } -> Dom.hide(#waiting)
 
     // invoked when the game_view is ready to initialize the dom with the appropriate data. 
     @client when_ready(name,color): void = (

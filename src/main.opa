@@ -18,9 +18,9 @@ start(uri) =
         | { path = [] ... }            -> login_required( -> Page.main() )
         | { path = ["login"] ... }     -> User.login_view()
         | { path = ["signup"] ...}     -> User.signup_view()
-        | { path = ["game",x|xs] ...}  -> login_required( -> Game.game_view(x) )
-        | { path = ["user", x|xs] ...} -> User.withUserNamed(x, User.page_view(_), Page.fourOfour)
-        | { path = x ...}              -> Page.fourOfour()
+        | { path = ["game",x|_] ...}   -> login_required( -> Game.game_view(x) )
+        | { path = ["user", x|_] ...}  -> User.withUserNamed(x, User.page_view(_), Page.fourOfour)
+        | { ... }                      -> Page.fourOfour()
 
 
 /* Statically embed a bundle of resources */

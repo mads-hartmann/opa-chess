@@ -27,10 +27,10 @@ Position = {{
     movable_chess_positions(pos: chess_position, piece: piece, user_color: colorC, board: board): list(chess_position) = 
     (
         // short-cuts. No need to explicitly pass the board all over the code. 
-        r     = right(_,board,1)
-        l     = left(_,board,1)
-        u     = up(_,board,1)
-        d     = down(_,board,1)
+        r     = right(_,1)
+        l     = left(_,1)
+        u     = up(_,1)
+        d     = down(_,1)
         rOpt  = right_option(_,board,_)
         lOpt  = left_option(_,board,_)
         uOpt  = up_option(_,board,_)
@@ -132,32 +132,32 @@ Position = {{
     */
 
     mov_opt(pos,board,i,f) =
-        match f(pos,board,i) with
+        match f(pos,i) with
             | {none} -> {none}
             | ~{some} -> if Board.has_piece_of_own_color(board,some.number,some.letter) then {none} else {some = some}
 
-    right_option(pos,board,i) = mov_opt(pos,board,i,right(_,_,_))
-    left_option(pos,board,i) = mov_opt(pos,board,i,left(_,_,_))
-    up_option(pos,board,i) = mov_opt(pos,board,i,up(_,_,_))
-    down_option(pos,board,i) = mov_opt(pos,board,i,down(_,_,_))
+    right_option(pos,board,i) = mov_opt(pos,board,i,right(_,_))
+    left_option(pos,board,i)  = mov_opt(pos,board,i,left(_,_))
+    up_option(pos,board,i)    = mov_opt(pos,board,i,up(_,_))
+    down_option(pos,board,i)  = mov_opt(pos,board,i,down(_,_))
         
-    right(pos: chess_position,board: board,i: int): option(chess_position) = 
+    right(pos: chess_position, i: int): option(chess_position) = 
         x = Column.to_int(pos.letter)
         l = Column.from_int(x+i)
         next_pos = {pos with letter = l}
         if (x+i) > 72 then {none} else {some = next_pos}
     
-    left(pos: chess_position,board: board,i: int): option(chess_position) = 
+    left(pos: chess_position, i: int): option(chess_position) = 
         x = Column.to_int(pos.letter)
         l = Column.from_int(x-i)
         next_pos = {pos with letter = l}
         if (x-i) < 65 then {none} else {some = next_pos}
             
-    up(pos: chess_position,board: board,i: int): option(chess_position) = 
+    up(pos: chess_position, i: int): option(chess_position) = 
         next_pos = {pos with number = pos.number+i}
         if (pos.number + i) > 8 then {none} else {some = next_pos}
                                                      
-    down(pos: chess_position,board: board,i: int): option(chess_position) = 
+    down(pos: chess_position, i: int): option(chess_position) = 
         next_pos = {pos with number = pos.number-i}
         if (pos.number - i) < 1 then {none} else {some = next_pos}
 
@@ -176,12 +176,12 @@ Position = {{
     diagonal(direction, pos, board): list(chess_position) = 
         rec r(pos: chess_position,i,acc) = match i with
             | 0 -> acc
-            | x -> 
+            | _ -> 
                 p = match direction with
-                    | {left_up}    -> up(pos,board,1) |> Option.bind( p -> left_option(p,board,1),_)
-                    | {left_down}  -> down(pos,board,1) |> Option.bind( p-> left_option(p,board,1),_)
-                    | {right_up}   -> up(pos,board,1) |> Option.bind( p -> right_option(p,board,1),_) 
-                    | {right_down} -> down(pos,board,1) |> Option.bind( p -> right_option(p,board,1),_)
+                    | {left_up}    -> up(pos,1) |> Option.bind( p -> left_option(p,board,1),_)
+                    | {left_down}  -> down(pos,1) |> Option.bind( p-> left_option(p,board,1),_)
+                    | {right_up}   -> up(pos,1) |> Option.bind( p -> right_option(p,board,1),_) 
+                    | {right_down} -> down(pos,1) |> Option.bind( p -> right_option(p,board,1),_)
                 match p with 
                     | {none} -> acc
                     | {some = p} -> if Board.has_piece_of_opposite_color(board, p.number, p.letter) 
@@ -196,7 +196,7 @@ Position = {{
               acc: list(chess_position)
                 ): list(chess_position) = match i with
         | 0 -> acc
-        | x -> match f(pos,board,1) with
+        | _ -> match f(pos,board,1) with
             | {none}  -> acc 
             | ~{some} -> if Board.has_piece_of_opposite_color(board, some.number, some.letter) 
                          then [some|acc] 

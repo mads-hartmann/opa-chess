@@ -48,7 +48,7 @@ Page = {{
         create_game_onclick() = 
             name = Dom.get_value(#name)
             match Game.create(name, user) with 
-                | {success = game } -> Client.goto("/game/" ^ name)
+                | {success = _ } -> Client.goto("/game/" ^ name)
                 | {failure = xs }   -> Page.show_error(xs)
 
         menu_create_a_game_onclick() = 
@@ -64,7 +64,7 @@ Page = {{
                 |> List.iter( x -> Dom.transform([#gamesList +<- 
                         <li onclick={_ -> 
                             match Game.join(x.name, user) with 
-                                | { success = game } -> Client.goto("/game/" ^ x.name) 
+                                | { success = _ } -> Client.goto("/game/" ^ x.name) 
                                 | { failure = xs } -> Page.show_error(xs)
                         }>{x.name}</li>]),
                     _)

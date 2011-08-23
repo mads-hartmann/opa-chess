@@ -45,8 +45,8 @@ User = {{
         UserContext.execute((a -> a), state)
 
     is_logged_in() = match get_status() with 
-        | ~{user} -> true 
         | {unlogged} -> false 
+        | _ -> true
     
     login(username: string, password: string): bool = 
         match /user[username] with
@@ -63,7 +63,6 @@ User = {{
     
     create(username, email, password): outcome(user, list(string)) = 
         match /user[username] with 
-            | {some = user} -> { failure = ["A user with that username already exists"] }
             | {none} -> (
                 validator(c,a) = if String.is_empty(c.value) then [c.label ^ " is required"|a] else a
                 xs = [
@@ -84,6 +83,7 @@ User = {{
                         { success = u }
                     | { hd = x tl = xs} -> { failure = [x|xs] }
             )
+            | _ -> { failure = ["A user with that username already exists"] }
     
     update(user): void = /user[user.name] <- { some = user }
     
@@ -131,8 +131,8 @@ User = {{
                     email    = Dom.get_value(#email)
                     password = Dom.get_value(#password)
                     match User.create(username, email, password) with 
-                        | {success = user } -> Client.goto("/")
                         | {failure = failure } -> Page.show_error(failure)                            
+                        | _ -> Client.goto("/")
                 } />
             </li>
         </ul>
