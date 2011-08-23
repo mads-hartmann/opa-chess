@@ -1,5 +1,5 @@
 // 
-//  chess.opa
+//  board.opa
 //  chess
 //  
 //  Created by Mads Hartmann Jensen on 2011-07-31.
@@ -12,10 +12,6 @@ import stdlib.web.template
 import stdlib.core.map
 import stdlib.core
 
-/*
-    {Board module}
-*/
-
 type board = {
     chess_positions: stringmap(intmap(chess_position))
     current_color: colorC
@@ -25,12 +21,16 @@ Board = {{
     
     /*
         User-specific information related to one specific board. The color of the current 
-        user and the channel to use. 
+        user and the channel to use. These informations are stored in UserContext. 
     */
     user_color() = Option.get(Game.get_state()).color
     channel()    = Option.get(Game.get_state()).channel
         
-    prepare(board: board): void = 
+    /*
+        View related functions
+    */
+    
+    prepare(board: board): void =
     (
         do iteri(board, [colorize(_,_,_,_), labelize(_,_,_,_)])
         do place_pieces(board)
@@ -38,7 +38,7 @@ Board = {{
         void
     )
 
-    place_pieces(board: board) = 
+    place_pieces(board: board) =
     (
         do Dom.select_raw("td img") |> Dom.remove(_)
         do Map.To.val_list(board.chess_positions) |> List.iter(column ->  
@@ -55,7 +55,7 @@ Board = {{
         void
     )
 
-    update(board: board) = 
+    update(board: board) =
     (
         do place_pieces(board)
         do update_counters(board)
@@ -64,28 +64,6 @@ Board = {{
         ) else if your_king_is_dead(board) then (
             Network.broadcast({ winner = user_color() |> opposite_color(_) }, game_observer)
         ) else void
-    )
-    
-    opposite_king_is_dead(board: board): bool = 
-    (
-        Map.To.val_list(board.chess_positions) 
-            |> List.collect(Map.To.val_list(_),_) 
-            |> List.fold(pos,acc -> (
-                match pos.piece with
-                    | { some = {color = c kind = {king}}} -> if c != user_color() then false else acc
-                    | _ -> acc
-            ), _, true)
-    )
-    
-    your_king_is_dead(board): bool = 
-    (
-        Map.To.val_list(board.chess_positions) 
-            |> List.collect(Map.To.val_list(_),_) 
-            |> List.fold(pos,acc -> (
-                match pos.piece with
-                    | { some = {color = c kind = {king}}} -> if c == user_color() then false else acc
-                    | _ -> acc
-            ), _, true)        
     )
     
     update_counters(board: board) = 
@@ -103,44 +81,6 @@ Board = {{
         void
     )
     
-    /* 
-     * Given a row, column, board it will return some with a chess position if there is a 
-     * piece at the position _and_ it's of the proper color 
-     */    
-    piece_at(row,column,board): option(chess_position) =
-    (
-        column_letter = Column.from_int(column+64)
-        Map.get(column_letter, board.chess_positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_) |> pos ->
-            match pos with 
-                | { piece = { some = {color = color kind = kind}} ...} -> if color == user_color() then { some = pos } else {none}
-                | _ -> {none}
-    )
-    
-    /*
-     *
-     */
-    has_piece_of_own_color(board: board, row: int, column: string): bool = 
-    (
-        Map.get(column, board.chess_positions)
-            |> Option.get(_) 
-            |> Map.get(row, _) 
-            |> Option.get(_) 
-            |> pos -> match pos with 
-                | { piece = { some = {color = color kind = kind}} ...} -> color == user_color()
-                | _ -> false
-    )
-    
-    has_piece_of_opposite_color(board: board, row: int, column: string): bool = 
-    (
-        Map.get(column, board.chess_positions)
-            |> Option.get(_)
-            |> Map.get(row,_)
-            |> Option.get(_)
-            |> pos -> match pos with
-                | { piece = { some = {color = color kind = kind}} ...} -> color != user_color()
-                | _ -> false
-    )
-
     unbind(row,column,td,board): void = Dom.unbind_event(td,{click})
         
     add_on_click_events(row,column,td,board: board): void = 
@@ -190,7 +130,80 @@ Board = {{
         else 
             if mod(column,2) == 0 then Dom.add_class(td, "white") else Dom.add_class(td, "black")
     )
+
+    // Method for applying a list of functions on every td dom element in the board. 
+    iteri(board, xs: list(int,int,dom,board -> void)): void = 
+    (
+        do Dom.select_raw("tr") |> domToList(_) |> List.rev(_) |> List.iteri(rowi,tr -> 
+            Dom.select_children(tr) |> domToList(_) |> List.iteri(columi, td -> 
+                do List.iter(f -> f(rowi+1,columi+1,td,board),xs)
+                void
+            ,_)
+        ,_)
+        void
+    )
     
+    /*
+        Data related functions
+    */
+    
+    opposite_king_is_dead(board: board): bool = 
+    (
+        Map.To.val_list(board.chess_positions) 
+            |> List.collect(Map.To.val_list(_),_) 
+            |> List.fold(pos,acc -> (
+                match pos.piece with
+                    | { some = {color = c kind = {king}}} -> if c != user_color() then false else acc
+                    | _ -> acc
+            ), _, true)
+    )
+    
+    your_king_is_dead(board): bool = 
+    (
+        Map.To.val_list(board.chess_positions) 
+            |> List.collect(Map.To.val_list(_),_) 
+            |> List.fold(pos,acc -> (
+                match pos.piece with
+                    | { some = {color = c kind = {king}}} -> if c == user_color() then false else acc
+                    | _ -> acc
+            ), _, true)        
+    )
+    
+    /* 
+     * Given a row, column, board it will return some with a chess position if there is a 
+     * piece at the position _and_ it's of the proper color 
+     */    
+    piece_at(row,column,board): option(chess_position) =
+    (
+        column_letter = Column.from_int(column+64)
+        Map.get(column_letter, board.chess_positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_) |> pos ->
+            match pos with 
+                | { piece = { some = {color = color kind = kind}} ...} -> if color == user_color() then { some = pos } else {none}
+                | _ -> {none}
+    )
+    
+    has_piece_of_own_color(board: board, row: int, column: string): bool = 
+    (
+        Map.get(column, board.chess_positions)
+            |> Option.get(_) 
+            |> Map.get(row, _) 
+            |> Option.get(_) 
+            |> pos -> match pos with 
+                | { piece = { some = {color = color kind = kind}} ...} -> color == user_color()
+                | _ -> false
+    )
+
+    has_piece_of_opposite_color(board: board, row: int, column: string): bool = 
+    (
+        Map.get(column, board.chess_positions)
+            |> Option.get(_)
+            |> Map.get(row,_)
+            |> Option.get(_)
+            |> pos -> match pos with
+                | { piece = { some = {color = color kind = kind}} ...} -> color != user_color()
+                | _ -> false
+    )
+
     move(posFrom, posTo, board): board = 
     (
         next_color = match board.current_color with 
@@ -206,21 +219,7 @@ Board = {{
         ), chess_positions)
         { chess_positions = chess_positions2 current_color = next_color }
      )
-    
-    /* 
-        Method for applying a list of functions on every td dom element in the board. 
-    */
-    iteri(board, xs: list(int,int,dom,board -> void)): void = 
-    (
-        do Dom.select_raw("tr") |> domToList(_) |> List.rev(_) |> List.iteri(rowi,tr -> 
-            Dom.select_children(tr) |> domToList(_) |> List.iteri(columi, td -> 
-                do List.iter(f -> f(rowi+1,columi+1,td,board),xs)
-                void
-            ,_)
-        ,_)
-        void
-    )
-    
+
     create() = 
     { 
         current_color = {white} 
