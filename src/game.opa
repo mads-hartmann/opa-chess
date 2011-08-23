@@ -120,7 +120,7 @@ Game = {{
         Board.prepare(Board.create())
     )
 
-    game_view(name: string) = ( User.withUser( user -> 
+    game_view(name: string) = User.withUser( user -> 
         match Game.get(name) with 
             | { some = game } -> (
 
