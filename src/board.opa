@@ -243,8 +243,8 @@ Board = {{
                         | ("A",1) -> {pos with piece = some({ kind = {rook}   color = {white} })}
                         | ("B",1) -> {pos with piece = some({ kind = {knight} color = {white} })}
                         | ("C",1) -> {pos with piece = some({ kind = {bishop} color = {white} })}
-                        | ("D",1) -> {pos with piece = some({ kind = {king}   color = {white} })}
-                        | ("E",1) -> {pos with piece = some({ kind = {queen}  color = {white} })}
+                        | ("D",1) -> {pos with piece = some({ kind = {queen}  color = {white} })}
+                        | ("E",1) -> {pos with piece = some({ kind = {king}   color = {white} })}
                         | ("F",1) -> {pos with piece = some({ kind = {bishop} color = {white} })}
                         | ("G",1) -> {pos with piece = some({ kind = {knight} color = {white} })}
                         | ("H",1) -> {pos with piece = some({ kind = {rook}   color = {white} })}
