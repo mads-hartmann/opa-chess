@@ -23,6 +23,12 @@ Position = {{
         
     select_chess_position(pos: chess_position): dom = 
         Dom.select_raw("." ^ pos.letter ^ Int.to_string(pos.number))
+    
+    // would've named then 'andThen' but you can't have chars in infix functions. 
+    `<*>` = p,q -> Option.bind( x -> q(x),p)
+    
+    has_own(p,b)   = Board.has_piece_of_own_color(b,p.number,p.letter)
+    has_enemy(p,b) = Board.has_piece_of_opposite_color(b,p.number,p.letter)
         
     movable_chess_positions(pos: chess_position, piece: piece, user_color: colorC, board: board): list(chess_position) = 
     (
@@ -41,11 +47,11 @@ Position = {{
         uIncl = up_inclusive(pos,board,_)
         dIncl = down_inclusive(pos,board,_)
         
-        has_enemy(pos) = Board.has_piece_of_opposite_color(board,pos.number,pos.letter)
-        cant_kill(pos) = if has_enemy(pos) then {none} else {some = pos}
+        has_enemy(p) = Board.has_piece_of_opposite_color(board,p.number,p.letter)
+        cant_kill(p) = if has_enemy(p) then {none} else {some = p}
+        can_kill(p)  = if has_enemy(p) then {some = p} else {none}
         
-        // would've named then 'andThen' but you can't have chars in infix functions. 
-        `<*>` = p,q -> Option.bind( x -> q(x),p)
+        
         
         king_movements = 
             [rOpt(pos,1), 
@@ -94,28 +100,22 @@ Position = {{
                 ]) |> List.map( x -> { some = x}, _)
         
         pawn_movements = 
-        (
-            f(g: chess_position -> option(chess_position), xs: list(chess_position)): list(option(chess_position)) = 
-                List.filter_map(g, xs) |> List.map( x -> {some = x}, _)
-            
-            mov(special, movment_func_incl,movement_func) = 
+        (            
+            mov(two_square,en_passent, movment_func_incl,movement_func) = 
             (
-                possible_movements = 
-                    if pos.number == special
-                    then movment_func_incl(2) |> List.filter_map(cant_kill(_),_)
-                    else List.filter_map(x -> x, [movement_func(pos)]) |> List.filter_map(cant_kill(_),_)
+                movements = 
+                    if pos.number == two_square
+                    then movment_func_incl(2) |> List.map(cant_kill(_),_)
+                    else List.filter_map(x -> x, [movement_func(pos)]) |> List.map(cant_kill(_),_)
 
-                possible_attacks = (
+                attacks = 
                     xs = [ movement_func(pos) <*> r, movement_func(pos) <*> l ]
-                    List.filter_map(x -> x,xs))
-                    
-                movements = f(x -> if has_enemy(x) then {none} else {some = x}, possible_movements)
-                attacks   = f(x -> if has_enemy(x) then {some = x} else {none}, possible_attacks)
-
+                    List.filter_map(x -> x,xs) |> List.map(can_kill(_),_)
+                
                 movements ++ attacks
             )
             
-            if user_color == {white} then mov(2,uIncl,u) else mov(7,dIncl,d)
+            if user_color == {white} then mov(2,5,uIncl,u) else mov(7,4,dIncl,d)
         )
         
         (match piece.kind with
@@ -125,6 +125,36 @@ Position = {{
             | {queen}  -> queen_movements
             | {rook}   -> rook_movements
             | {pawn}   -> pawn_movements) |> List.filter_map( x -> x , _)
+    )
+    
+    en_passent(pos: chess_position, piece: piece, user_color: colorC, board: board): list(chess_position) = 
+    (
+        // TODO: has to be the turn right after the double move    
+        mov(en_passent, direction, pawn_dir) = 
+            if pos.number == en_passent then
+                xs = [direction(pos) <*> right(_,1), direction(pos) <*> left(_,1) ]
+                List.filter_map(x -> x,xs) 
+                    // make sure you're not trying to move unto one of your own pieces 
+                    |> List.filter( p -> has_own(p,board) != true, _)
+                    // making sure that the piece you're passing is actually a pawn
+                    |> List.filter_map( p ->  
+                        pawn_pos = Option.get(pawn_dir(p))
+                        posi: chess_position =
+                            Map.get(pawn_pos.letter, board.chess_positions)
+                                |> Option.get(_) 
+                                |> Map.get(pawn_pos.number, _) 
+                                |> Option.get(_) 
+
+                        match posi with
+                            | { piece = {some = { kind = {pawn} ...}} ...} -> {some = p}
+                            | _ -> {none}
+                            
+                    ,_)
+            else []
+
+        match piece.kind with
+            | {pawn} -> if user_color == {white} then mov(5,up(_,1),down(_,1)) else mov(4,down(_,1),up(_,1))
+            | _ -> []
     )
 
     /*
