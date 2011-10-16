@@ -76,22 +76,26 @@ Page = {{
             </div>
             <div class="content">
                 <form>
-                    <ul id=#join class="hidden">
-                        <a class="back" onclick={ _ -> join_back_onclick() }> ← Back</a>
-                        <ul id=#gamesList></ul>
-                    </ul>
-                    <ul id=#create class="hidden">
-                        <a class="back" onclick={ _ -> create_back_onclick() }> ← Back</a>
-                        <li>
-                            <input id=#name type="text" placeholder="Name of game" onnewline={_ -> create_game_onclick() }/>
-                            <a class="button" onclick={ _ -> create_game_onclick() }>Create</a>
-                        </li>
-                    </ul>
+                    <div id=#join class="hidden">
+                        <ul>
+                            <a class="back" onclick={ _ -> join_back_onclick() }> ← Back</a>
+                            <ul id=#gamesList></ul>
+                        </ul>
+                    </div>
+                    <div id=#create class="hidden">
+                        <ul>
+                            <a class="back" onclick={ _ -> create_back_onclick() }> ← Back</a>
+                            <li>
+                                <input id=#name type="text" placeholder="Name of game" onnewline={_ -> create_game_onclick() }/>
+                                <a class="button" onclick={ _ -> create_game_onclick() }>Create</a>
+                            </li>
+                        </ul>
+                    </div>
                     <div id=#main>
-                        <ul id=#menu>
-                            <li><a class="button" onclick={_ -> menu_create_a_game_onclick() }>Create a game</a></li>
-                            <li><a class="button" onclick={_ -> menu_join_a_game_onclick() }>Join a game</a></li>
-                            <li><a class="button" onclick={_ -> User.logout()}>Logout</a></li>
+                        <ul class="menu">
+                            <li><a class="button" onclick={_ -> menu_create_a_game_onclick() }><span class="inner">Create a game</span></a></li>
+                            <li><a class="button" onclick={_ -> menu_join_a_game_onclick() }><span class="inner">Join a game</span></a></li>
+                            <li><a class="button" onclick={_ -> User.logout()}><span class="inner">Logout</span></a></li>
                         </ul>
                         { Chat.create(user.name) }
                     </div>

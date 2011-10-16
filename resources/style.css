@@ -111,9 +111,10 @@ textarea {
 body {
   margin: 0px;
   background: url("/resources/bg.jpg") repeat scroll 0% 0%;
+  font-family: Helvetica;
 }
 
-/* line 64, ../sass/style.scss */
+/* line 65, ../sass/style.scss */
 .container {
   width: 60%;
   left: 20%;
@@ -121,13 +122,13 @@ body {
   top: 100px;
   position: absolute;
 }
-/* line 71, ../sass/style.scss */
+/* line 72, ../sass/style.scss */
 .container#login {
   width: 325px;
   left: 50%;
-  margin-left: 325px/2;
+  margin-left: -162px;
 }
-/* line 77, ../sass/style.scss */
+/* line 78, ../sass/style.scss */
 .container #login_box {
   background: url("/resources/login_box_bg.png");
   width: 233px;
@@ -135,37 +136,37 @@ body {
   padding-top: 100px;
   padding: 100px 46px 0px 46px;
 }
-/* line 87, ../sass/style.scss */
+/* line 88, ../sass/style.scss */
 .container #login_box .text input {
   width: 221px;
 }
-/* line 91, ../sass/style.scss */
+/* line 92, ../sass/style.scss */
 .container #login_box .button {
   float: right;
 }
-/* line 93, ../sass/style.scss */
+/* line 94, ../sass/style.scss */
 .container #login_box .button .inner {
   width: 80px;
 }
-/* line 98, ../sass/style.scss */
+/* line 99, ../sass/style.scss */
 .container #login_box ul {
   margin-top: 10px;
 }
-/* line 100, ../sass/style.scss */
+/* line 101, ../sass/style.scss */
 .container #login_box ul li {
   margin-bottom: 5px;
 }
-/* line 106, ../sass/style.scss */
+/* line 107, ../sass/style.scss */
 .container .text {
   background: url("/resources/input_field_left.png") top left no-repeat;
   padding-left: 6px;
   display: block;
   height: 50px;
 }
-/* line 114, ../sass/style.scss */
+/* line 115, ../sass/style.scss */
 .container .text input {
   background: url("/resources/input_field_right.png") top right no-repeat;
-  padding: 0px 0px 0px 6px;
+  padding: 0px 6px 0px 0px;
   height: 50px;
   outline: none;
   border: 0px;
@@ -174,22 +175,24 @@ body {
   line-height: 13px;
   font-weight: bold;
 }
-/* line 126, ../sass/style.scss */
+/* line 127, ../sass/style.scss */
 .container .text input::-webkit-input-placeholder {
   color: #8e6c40;
 }
-/* line 129, ../sass/style.scss */
+/* line 130, ../sass/style.scss */
 .container .text input:-moz-placeholder {
   color: #8e6c40;
 }
-/* line 134, ../sass/style.scss */
+/* line 135, ../sass/style.scss */
 .container .button {
   background: url("/resources/button_sprite_left.png") top left no-repeat;
   height: 50px;
   padding: 0px 0px 0px 6px;
   display: block;
+  text-decoration: none;
+  text-align: center;
 }
-/* line 142, ../sass/style.scss */
+/* line 145, ../sass/style.scss */
 .container .button .inner {
   background: url("/resources/button_sprite_right.png") top right no-repeat;
   height: 50px;
@@ -202,56 +205,65 @@ body {
   font-size: 14px;
   text-shadow: white 1px 1px 1px;
 }
-/* line 154, ../sass/style.scss */
+/* line 157, ../sass/style.scss */
 .container .button:hover {
   background-position: 0px -50px;
 }
-/* line 156, ../sass/style.scss */
+/* line 159, ../sass/style.scss */
 .container .button:hover .inner {
   background-position: 100% -50px;
 }
-/* line 160, ../sass/style.scss */
+/* line 163, ../sass/style.scss */
 .container .button:active {
   background-position: 0px -100px;
 }
-/* line 162, ../sass/style.scss */
+/* line 165, ../sass/style.scss */
 .container .button:active .inner {
   background-position: 100% -100px;
 }
-/* line 168, ../sass/style.scss */
+/* line 171, ../sass/style.scss */
 .container ul {
   text-align: left;
 }
-/* line 172, ../sass/style.scss */
+/* line 175, ../sass/style.scss */
 .container input[type=submit] {
   float: right;
   margin-top: 20px;
 }
-/* line 180, ../sass/style.scss */
+/* line 183, ../sass/style.scss */
 .container#lobby input[type=submit] {
   float: none;
   margin-top: 0px;
   width: 260px;
 }
-/* line 188, ../sass/style.scss */
+/* line 191, ../sass/style.scss */
 .container#create label {
   width: 100px;
   display: inline-block;
 }
-/* line 193, ../sass/style.scss */
+/* line 196, ../sass/style.scss */
 .container#create input {
   width: 300px;
 }
-/* line 201, ../sass/style.scss */
-.container#lobby #main ul#menu {
+/* line 202, ../sass/style.scss */
+.container#lobby #main {
+  background: url("/resources/menu_box_background.png");
+  padding: 140px 40px 40px 40px;
+  height: 380px;
+  width: 675px;
+}
+/* line 210, ../sass/style.scss */
+.container#lobby #main ul.menu {
   margin: 0;
   padding: 0;
   border: 0;
   overflow: hidden;
   *zoom: 1;
+  margin-left: 100px;
+  margin-top: 20px;
 }
 /* line 60, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
-.container#lobby #main ul#menu li {
+.container#lobby #main ul.menu li {
   list-style-image: none;
   list-style-type: none;
   margin-left: 0px;
@@ -262,59 +274,81 @@ body {
   padding-right: 4px;
 }
 /* line 48, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
-.container#lobby #main ul#menu li:first-child, .container#lobby #main ul#menu li.first {
+.container#lobby #main ul.menu li:first-child, .container#lobby #main ul.menu li.first {
   padding-left: 0;
 }
 /* line 49, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
-.container#lobby #main ul#menu li:last-child {
+.container#lobby #main ul.menu li:last-child {
   padding-right: 0;
 }
 /* line 50, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
-.container#lobby #main ul#menu li.last {
+.container#lobby #main ul.menu li.last {
   padding-right: 0;
 }
-/* line 204, ../sass/style.scss */
-.container#lobby #main ul#menu li {
+/* line 215, ../sass/style.scss */
+.container#lobby #main ul.menu li {
   margin: 10px 0px;
   text-align: center;
 }
-/* line 211, ../sass/style.scss */
+/* line 222, ../sass/style.scss */
 .container#lobby .back {
   display: inline-block;
   margin: 0px 0px 10px 0px;
   color: #000;
   text-decoration: none;
 }
-/* line 219, ../sass/style.scss */
-.container #chat_messages {
-  padding: 9px;
-  border: solid 1px #E5E5E5;
-  outline: 0;
-  font: normal 13px/100% Verdana, Tahoma, sans-serif;
-  color: #999;
-  background: white url("bg_form.png") left top repeat-x;
-  background: -webkit-gradient(linear, left top, left 25, from(white), color-stop(4%, #eeeeee), to(white));
-  background: -moz-linear-gradient(top, white, #eeeeee 1px, white 25px);
-  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
-  -o-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
-  clear: both;
-  margin-bottom: 10px;
+/* line 229, ../sass/style.scss */
+.container#lobby .button span {
+  display: block;
+  width: 140px;
+  line-height: 50px;
 }
-/* line 224, ../sass/style.scss */
+/* line 236, ../sass/style.scss */
+.container#lobby .chat .input {
+  margin-left: 200px;
+  width: 300px;
+}
+/* line 240, ../sass/style.scss */
+.container#lobby .chat .input .text {
+  float: left;
+  width: 205px;
+  margin-right: 5px;
+}
+/* line 246, ../sass/style.scss */
+.container#lobby .chat .input .button {
+  float: left;
+}
+/* line 248, ../sass/style.scss */
+.container#lobby .chat .input .button .inner {
+  width: 70px;
+}
+/* line 256, ../sass/style.scss */
+.container #chat_messages {
+  clear: both;
+  border: 0px;
+  background: transparent;
+  height: 200px;
+  margin: 20px 10px 10px 10px;
+  color: #ffebc7;
+  text-shadow: black 1px 1px 1px;
+}
+/* line 265, ../sass/style.scss */
+.container #chat_messages li {
+  margin: 3px 0px;
+}
+/* line 269, ../sass/style.scss */
 .container #chat_messages .user {
   font-weight: bold;
 }
 
-/* line 230, ../sass/style.scss */
+/* line 275, ../sass/style.scss */
 #status {
   height: 45px;
   padding-bottom: 30px;
   text-align: center;
   color: #fff;
 }
-/* line 236, ../sass/style.scss */
+/* line 281, ../sass/style.scss */
 #status ul {
   margin: 0;
   padding: 0;
@@ -351,12 +385,12 @@ body {
 #status ul li.last {
   padding-right: 0;
 }
-/* line 245, ../sass/style.scss */
+/* line 290, ../sass/style.scss */
 #status ul li {
   margin-left: 50px;
   float: right;
 }
-/* line 250, ../sass/style.scss */
+/* line 295, ../sass/style.scss */
 #status ul span {
   color: #fff;
 }
@@ -364,7 +398,7 @@ body {
 /*
     The game view
 */
-/* line 264, ../sass/style.scss */
+/* line 309, ../sass/style.scss */
 .game .chat {
   position: absolute;
   left: 0px;
@@ -374,12 +408,12 @@ body {
   width: 300px;
   height: 100%;
 }
-/* line 273, ../sass/style.scss */
+/* line 318, ../sass/style.scss */
 .game .chat .input {
   position: absolute;
   bottom: 10px;
 }
-/* line 279, ../sass/style.scss */
+/* line 324, ../sass/style.scss */
 .game #board {
   position: absolute;
   left: 300px;
@@ -387,7 +421,7 @@ body {
   top: 0%;
   right: 0%;
 }
-/* line 286, ../sass/style.scss */
+/* line 331, ../sass/style.scss */
 .game #board .wood {
   position: relative;
   left: 50%;
@@ -397,7 +431,7 @@ body {
   padding: 30px;
   background: url("/resources/board-bg.png") 0px 0px no-repeat;
 }
-/* line 297, ../sass/style.scss */
+/* line 342, ../sass/style.scss */
 .game #waiting {
   z-index: 1;
   position: absolute;
@@ -406,7 +440,7 @@ body {
   top: 0px;
   background: rgba(0, 0, 0, 0.5);
 }
-/* line 305, ../sass/style.scss */
+/* line 350, ../sass/style.scss */
 .game #waiting h1 {
   text-align: center;
   color: #fff;
@@ -423,24 +457,24 @@ body {
 /*
     End of game view
 */
-/* line 324, ../sass/style.scss */
+/* line 369, ../sass/style.scss */
 td, th {
   text-align: center;
   width: 75px;
   height: 75px;
 }
 
-/* line 330, ../sass/style.scss */
+/* line 375, ../sass/style.scss */
 .selected {
   background: green;
 }
 
-/* line 334, ../sass/style.scss */
+/* line 379, ../sass/style.scss */
 .movable {
   background: orange;
 }
 
-/* line 339, ../sass/style.scss */
+/* line 384, ../sass/style.scss */
 .hidden {
   display: none;
 }
@@ -448,7 +482,7 @@ td, th {
 /*
   forms 
 */
-/* line 347, ../sass/style.scss */
+/* line 392, ../sass/style.scss */
 .error_container {
   background: #b30a0a;
   margin: 20px 0px;
@@ -456,19 +490,19 @@ td, th {
   border: 2px solid black;
   color: white;
 }
-/* line 354, ../sass/style.scss */
+/* line 399, ../sass/style.scss */
 .error_container ul {
   text-align: left;
   padding-left: 20px;
   list-style: disc;
 }
 
-/* line 361, ../sass/style.scss */
+/* line 406, ../sass/style.scss */
 .no_errors {
   display: none;
 }
 
-/* line 365, ../sass/style.scss */
+/* line 410, ../sass/style.scss */
 .has_errors {
   display: block;
 }

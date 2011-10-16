@@ -59,6 +59,7 @@ textarea {
 body {
     margin: 0px;
     background : url("/resources/bg.jpg") repeat scroll 0% 0%;
+    font-family: Helvetica;
 }
 
 .container { 
@@ -71,7 +72,7 @@ body {
     &#login {
         width      : 325px;
         left       : 50%;
-        margin-left: 325px/2;
+        margin-left: -162px;
     }
     
     #login_box {
@@ -113,7 +114,7 @@ body {
       height      : $height;
       input {
         background : url('/resources/input_field_right.png') top right no-repeat;
-        padding    : 0px 0px 0px $padding;
+        padding    : 0px $padding 0px 0px;
         height     : $height;
         outline    : none;
         border     : 0px;
@@ -132,12 +133,14 @@ body {
     }
     
     .button {
-      $height   : 50px;
-      $padding  : 6px;
-      background: url('/resources/button_sprite_left.png') top left no-repeat;
-      height    : $height;
-      padding   : 0px 0px 0px $padding;
-      display   : block;
+      $height        : 50px;
+      $padding       : 6px;
+      background     : url('/resources/button_sprite_left.png') top left no-repeat;
+      height         : $height;
+      padding        : 0px 0px 0px $padding;
+      display        : block;
+      text-decoration: none;
+      text-align     : center;
       
       .inner {
         background: url('/resources/button_sprite_right.png') top right no-repeat;
@@ -197,33 +200,75 @@ body {
     
     &#lobby {
         #main {
+          $padding-top: 140px;
+          $padding    : 40px;
+          background  : url('/resources/menu_box_background.png');
+          padding     : $padding-top $padding $padding $padding;
+          height      : 560px - $padding-top - $padding;
+          width       : 755px - (2*$padding);
             
-        ul#menu {
-                @include horizontal-list();
-                
-                li {
-                    margin    : 10px 0px;
-                    text-align: center;
-                }
+          ul.menu {
+            @include horizontal-list();
+            margin-left: 100px;
+            margin-top: 20px;
+            
+            li {
+              margin    : 10px 0px;
+              text-align: center;
             }
+          }
         }
-
-        .back {
-            display        : inline-block;
-            margin         : 0px 0px 10px 0px;
-            color          : #000;
-            text-decoration: none;
+          
+          .back {
+              display        : inline-block;
+              margin         : 0px 0px 10px 0px;
+              color          : #000;
+              text-decoration: none;
+          }
+          
+          .button span {
+            display: block;
+            width: 140px;
+            line-height: 50px;
+          }
+        
+      .chat {
+        .input {
+          margin-left: 200px;
+          width: 300px;
+          
+          .text {
+            float: left;
+            width: 205px;
+            margin-right: 5px;
+          }
+          
+          .button {
+            float: left;
+            .inner {
+              width: 70px;
+            }
+          }
         }
+      }
     }
     
     #chat_messages {
-        @include boxy();
-        clear        : both;
-        margin-bottom: 10px;
-        
-        .user {
-            font-weight: bold;
-        }
+      clear: both;
+      border: 0px;
+      background: transparent;
+      height: 200px;
+      margin: 20px 10px 10px 10px;
+      color: #ffebc7;
+      @include text-shadow(#000, 1px, 1px, 1px);
+
+      li {
+        margin: 3px 0px;
+      }
+      
+      .user {
+          font-weight: bold;
+      }
     }
 }
 
