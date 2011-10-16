@@ -103,11 +103,13 @@ User = {{
                     Dom.give_focus(#username)
 
         Page.default({ some = "login"},
+            <div id="login_box">
             <ul onready={ _ -> Dom.give_focus(#username) }>
-                <li><input id=#username placeholder="Username"/></li>
-                <li><input id=#password placeholder="Password" type="password" onnewline={ _ -> attempt_login() }/></li>
-                <li><input type="submit" value="Login" onclick={ _ -> attempt_login() } /></li>
+                <li><span class="text"><input id=#username placeholder="Username"/></span></li>
+                <li><span class="text"><input id=#password placeholder="Password" type="password" onnewline={ _ -> attempt_login() }/></span></li>
+                <li><span class="button"><input type="submit" class="inner" value="Login" onclick={ _ -> attempt_login() } /></span></li>
             </ul>
+            </div>
         )
     )
     
