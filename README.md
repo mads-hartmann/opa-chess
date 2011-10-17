@@ -21,3 +21,5 @@ Simply 'cd' into the project root and run
     
 Now point your browser to 'localhost:8080/signup' to create your account. You'll 
 need two different browsers if you're going to play on the same machine.  
+
+Once you've created your account you can see your profile at localhost:8080/user/{username}
