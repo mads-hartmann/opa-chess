@@ -133,13 +133,13 @@ Game = {{
         
         do Dom.set_text(#color_of_player,colorc_to_string(color))
         do Dom.set_text(#name_of_game, name)
-        do Dom.set_text(#color_of_current_player, colorc_to_string({white}))
+        do Dom.set_text(#color_of_current_player, colorc_to_string(board.current_color))
         do Network.observe(message_recieved, channel)
         
         do if Option.is_none(game.black) then
             Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for other player to join.")
         else 
-            if game_state.color == color then 
+            if color == board.current_color then 
                 Dom.hide(#waiting)
             else 
                 do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for other player to move.")

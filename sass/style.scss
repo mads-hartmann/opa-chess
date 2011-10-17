@@ -148,6 +148,54 @@ body {
         margin-left: -162px;
     }
     
+    &#user {
+      width: 475px;
+      margin-left: -238px;
+      #profile_page {
+        padding: 20px;
+        width: 475px - 40px;
+        height: 290px - 40px;
+        background: url('/resources/profile_page_bg.png');
+      }
+      .rank_image {
+        float: left;
+        padding-right: 20px;
+      }
+      ul {
+        clear: both;
+        @include horizontal-list;
+        padding: 55px 0px 0px 30px;
+        text-align: center;
+        
+        li {
+          width: 110px;
+          text-align: center;
+        }
+        
+        h3 {
+          color: #fff3e4;
+          font-weight: bold;
+          font-size: 40px;
+        }
+        span {
+          color: #fff799;
+          font-size: 19px;
+          font-weight: bold;
+        }
+      }
+      h1 {
+        color: #fff3e4;
+        font-size: 30px;
+        font-weight: bold;
+        text-transform: capitalize;
+      }
+      h2 {
+        color: #fff799;
+        font-size: 16px;
+        padding-top:5px;
+      }
+    }
+    
     #login_box {
       $padding     : 46px;
       $padding-top : 90px;
@@ -164,6 +212,7 @@ body {
       
       .button {
         float: right;
+        margin-left: 5px;
         .inner {
           width: 80px;
         }
@@ -241,6 +290,7 @@ body {
           height: 740px;
           padding: 0px $padding;
           margin-left: 140px;
+          margin-bottom: 30px;
 
           .back {
             margin-top: 40px;
@@ -251,7 +301,7 @@ body {
           #gamesList {
             margin  : 20px;
             height  : 614px;
-            overflow: scroll;
+            overflow-y: auto;
 
             li {
               color       : #fff3e4;
@@ -309,6 +359,7 @@ body {
       height    : 200px;
       margin    : 20px 10px 10px 10px;
       color     : #ffebc7;
+      overflow  : hidden;
       @include text-shadow(#000, 1px, 1px, 1px);
 
       li {
@@ -370,7 +421,7 @@ body {
           bottom: 70px;
           top: 0px;
           width: 280px;
-          overflow-y: scroll;
+          overflow: hidden;
         }
 
         li {

@@ -205,6 +205,87 @@ body {
   margin-left: -162px;
 }
 /* line 151, ../sass/style.scss */
+.container#user {
+  width: 475px;
+  margin-left: -238px;
+}
+/* line 154, ../sass/style.scss */
+.container#user #profile_page {
+  padding: 20px;
+  width: 435px;
+  height: 250px;
+  background: url("/resources/profile_page_bg.png");
+}
+/* line 160, ../sass/style.scss */
+.container#user .rank_image {
+  float: left;
+  padding-right: 20px;
+}
+/* line 164, ../sass/style.scss */
+.container#user ul {
+  clear: both;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  *zoom: 1;
+  padding: 55px 0px 0px 30px;
+  text-align: center;
+}
+/* line 60, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+.container#user ul li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0px;
+  white-space: nowrap;
+  display: inline;
+  float: left;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+/* line 48, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+.container#user ul li:first-child, .container#user ul li.first {
+  padding-left: 0;
+}
+/* line 49, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+.container#user ul li:last-child {
+  padding-right: 0;
+}
+/* line 50, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+.container#user ul li.last {
+  padding-right: 0;
+}
+/* line 170, ../sass/style.scss */
+.container#user ul li {
+  width: 110px;
+  text-align: center;
+}
+/* line 175, ../sass/style.scss */
+.container#user ul h3 {
+  color: #fff3e4;
+  font-weight: bold;
+  font-size: 40px;
+}
+/* line 180, ../sass/style.scss */
+.container#user ul span {
+  color: #fff799;
+  font-size: 19px;
+  font-weight: bold;
+}
+/* line 186, ../sass/style.scss */
+.container#user h1 {
+  color: #fff3e4;
+  font-size: 30px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+/* line 192, ../sass/style.scss */
+.container#user h2 {
+  color: #fff799;
+  font-size: 16px;
+  padding-top: 5px;
+}
+/* line 199, ../sass/style.scss */
 .container #login_box {
   background: url("/resources/login_box_bg.png");
   width: 233px;
@@ -212,47 +293,48 @@ body {
   padding-top: 90px;
   padding: 90px 46px 0px 46px;
 }
-/* line 161, ../sass/style.scss */
+/* line 209, ../sass/style.scss */
 .container #login_box .text input {
   width: 221px;
 }
-/* line 165, ../sass/style.scss */
+/* line 213, ../sass/style.scss */
 .container #login_box .button {
   float: right;
+  margin-left: 5px;
 }
-/* line 167, ../sass/style.scss */
+/* line 216, ../sass/style.scss */
 .container #login_box .button .inner {
   width: 80px;
 }
-/* line 172, ../sass/style.scss */
+/* line 221, ../sass/style.scss */
 .container #login_box ul {
   margin-top: 20px;
 }
-/* line 174, ../sass/style.scss */
+/* line 223, ../sass/style.scss */
 .container #login_box ul li {
   margin-bottom: 5px;
 }
-/* line 180, ../sass/style.scss */
+/* line 229, ../sass/style.scss */
 .container ul {
   text-align: left;
 }
-/* line 185, ../sass/style.scss */
+/* line 234, ../sass/style.scss */
 .container#create label {
   width: 100px;
   display: inline-block;
 }
-/* line 190, ../sass/style.scss */
+/* line 239, ../sass/style.scss */
 .container#create input {
   width: 300px;
 }
-/* line 197, ../sass/style.scss */
+/* line 246, ../sass/style.scss */
 .container#lobby #main, .container#lobby #create {
   background: url("/resources/menu_box_background.png");
   padding: 140px 40px 40px 40px;
   height: 380px;
   width: 675px;
 }
-/* line 205, ../sass/style.scss */
+/* line 254, ../sass/style.scss */
 .container#lobby #main ul.menu, .container#lobby #create ul.menu {
   margin: 0;
   padding: 0;
@@ -285,55 +367,56 @@ body {
 .container#lobby #main ul.menu li.last, .container#lobby #create ul.menu li.last {
   padding-right: 0;
 }
-/* line 210, ../sass/style.scss */
+/* line 259, ../sass/style.scss */
 .container#lobby #main ul.menu li, .container#lobby #create ul.menu li {
   margin: 10px 0px;
   text-align: center;
 }
-/* line 217, ../sass/style.scss */
+/* line 266, ../sass/style.scss */
 .container#lobby #create {
   background-image: url("/resources/menu_create_background.png");
   padding-top: 68px;
   padding-bottom: 112px;
 }
-/* line 222, ../sass/style.scss */
+/* line 271, ../sass/style.scss */
 .container#lobby #create .text {
   float: left;
   margin-left: 110px;
 }
-/* line 225, ../sass/style.scss */
+/* line 274, ../sass/style.scss */
 .container#lobby #create .text input {
   width: 294px;
 }
-/* line 229, ../sass/style.scss */
+/* line 278, ../sass/style.scss */
 .container#lobby #create .button {
   float: left;
 }
-/* line 232, ../sass/style.scss */
+/* line 281, ../sass/style.scss */
 .container#lobby #create .back {
   margin-bottom: 190px;
 }
-/* line 237, ../sass/style.scss */
+/* line 286, ../sass/style.scss */
 .container#lobby #join {
   background: url("/resources/games_background.png") top left no-repeat;
   width: 435px;
   height: 740px;
   padding: 0px 20px;
   margin-left: 140px;
+  margin-bottom: 30px;
 }
-/* line 245, ../sass/style.scss */
+/* line 295, ../sass/style.scss */
 .container#lobby #join .back {
   margin-top: 40px;
   margin-bottom: 25px;
   color: #FFEBC7;
 }
-/* line 251, ../sass/style.scss */
+/* line 301, ../sass/style.scss */
 .container#lobby #join #gamesList {
   margin: 20px;
   height: 614px;
-  overflow: scroll;
+  overflow-y: auto;
 }
-/* line 256, ../sass/style.scss */
+/* line 306, ../sass/style.scss */
 .container#lobby #join #gamesList li {
   color: #fff3e4;
   background: url("/resources/pawn_games_list.png") center left no-repeat;
@@ -342,44 +425,44 @@ body {
   height: 28px;
   font-size: 18px;
 }
-/* line 263, ../sass/style.scss */
+/* line 313, ../sass/style.scss */
 .container#lobby #join #gamesList li:hover {
   cursor: pointer;
   color: #000;
 }
-/* line 271, ../sass/style.scss */
+/* line 321, ../sass/style.scss */
 .container#lobby .back {
   display: inline-block;
   margin: 0px 0px 10px 0px;
   color: #fff6e4;
   text-decoration: none;
 }
-/* line 278, ../sass/style.scss */
+/* line 328, ../sass/style.scss */
 .container#lobby .button span {
   display: block;
   width: 140px;
   line-height: 50px;
 }
-/* line 285, ../sass/style.scss */
+/* line 335, ../sass/style.scss */
 .container#lobby .chat .input {
   margin-left: 200px;
   width: 300px;
 }
-/* line 289, ../sass/style.scss */
+/* line 339, ../sass/style.scss */
 .container#lobby .chat .input .text {
   float: left;
   width: 205px;
   margin-right: 5px;
 }
-/* line 295, ../sass/style.scss */
+/* line 345, ../sass/style.scss */
 .container#lobby .chat .input .button {
   float: left;
 }
-/* line 297, ../sass/style.scss */
+/* line 347, ../sass/style.scss */
 .container#lobby .chat .input .button .inner {
   width: 70px;
 }
-/* line 305, ../sass/style.scss */
+/* line 355, ../sass/style.scss */
 .container #chat_messages {
   clear: both;
   border: 0px;
@@ -387,22 +470,23 @@ body {
   height: 200px;
   margin: 20px 10px 10px 10px;
   color: #ffebc7;
+  overflow: hidden;
   text-shadow: black 1px 1px 1px;
 }
-/* line 314, ../sass/style.scss */
+/* line 365, ../sass/style.scss */
 .container #chat_messages li {
   margin: 3px 0px;
   font-size: 13px;
 }
 
-/* line 321, ../sass/style.scss */
+/* line 372, ../sass/style.scss */
 #status {
   height: 45px;
   padding-bottom: 30px;
   text-align: center;
   color: #fff;
 }
-/* line 327, ../sass/style.scss */
+/* line 378, ../sass/style.scss */
 #status ul {
   margin: 0;
   padding: 0;
@@ -439,12 +523,12 @@ body {
 #status ul li.last {
   padding-right: 0;
 }
-/* line 336, ../sass/style.scss */
+/* line 387, ../sass/style.scss */
 #status ul li {
   margin-left: 50px;
   float: right;
 }
-/* line 341, ../sass/style.scss */
+/* line 392, ../sass/style.scss */
 #status ul span {
   color: #fff;
 }
@@ -452,7 +536,7 @@ body {
 /*
     The game view
 */
-/* line 355, ../sass/style.scss */
+/* line 406, ../sass/style.scss */
 .game .chat {
   position: absolute;
   left: 0px;
@@ -464,7 +548,7 @@ body {
   color: #ffebc7;
   text-shadow: black 1px 1px 1px;
 }
-/* line 366, ../sass/style.scss */
+/* line 417, ../sass/style.scss */
 .game .chat #chat_messages {
   margin: 10px;
   position: absolute;
@@ -472,36 +556,36 @@ body {
   bottom: 70px;
   top: 0px;
   width: 280px;
-  overflow-y: scroll;
+  overflow: hidden;
 }
-/* line 376, ../sass/style.scss */
+/* line 427, ../sass/style.scss */
 .game .chat li {
   margin: 3px 0px;
   font-size: 13px;
 }
-/* line 381, ../sass/style.scss */
+/* line 432, ../sass/style.scss */
 .game .chat .input {
   position: absolute;
   bottom: 10px;
 }
-/* line 386, ../sass/style.scss */
+/* line 437, ../sass/style.scss */
 .game .chat .text {
   margin-left: 5px;
   margin-right: 5px;
   float: left;
 }
-/* line 392, ../sass/style.scss */
+/* line 443, ../sass/style.scss */
 .game .chat .button {
   float: left;
 }
-/* line 394, ../sass/style.scss */
+/* line 445, ../sass/style.scss */
 .game .chat .button .inner {
   display: block;
   width: 48px;
   line-height: 47px;
   float: left;
 }
-/* line 403, ../sass/style.scss */
+/* line 454, ../sass/style.scss */
 .game #board {
   position: absolute;
   left: 300px;
@@ -509,7 +593,7 @@ body {
   top: 0%;
   right: 0%;
 }
-/* line 410, ../sass/style.scss */
+/* line 461, ../sass/style.scss */
 .game #board .wood {
   position: relative;
   left: 50%;
@@ -519,7 +603,7 @@ body {
   padding: 31px 30px 30px 31px;
   background: url("/resources/board-bg.png") 0px 0px no-repeat;
 }
-/* line 421, ../sass/style.scss */
+/* line 472, ../sass/style.scss */
 .game #waiting {
   z-index: 1;
   position: absolute;
@@ -528,7 +612,7 @@ body {
   top: 0px;
   background: rgba(0, 0, 0, 0.5);
 }
-/* line 429, ../sass/style.scss */
+/* line 480, ../sass/style.scss */
 .game #waiting h1 {
   text-align: center;
   color: #fff;
@@ -541,7 +625,7 @@ body {
   margin-top: -100px;
   margin-left: -200px;
 }
-/* line 440, ../sass/style.scss */
+/* line 491, ../sass/style.scss */
 .game #waiting h1 a {
   color: white;
   font-weight: bold;
@@ -550,7 +634,7 @@ body {
 /*
     End of game view
 */
-/* line 452, ../sass/style.scss */
+/* line 503, ../sass/style.scss */
 td, th {
   text-align: center;
   width: 75px !important;
@@ -559,22 +643,22 @@ td, th {
   display: inline-block;
 }
 
-/* line 460, ../sass/style.scss */
+/* line 511, ../sass/style.scss */
 tr {
   height: 75px !important;
 }
 
-/* line 464, ../sass/style.scss */
+/* line 515, ../sass/style.scss */
 .selected {
   background: url("/resources/selected_brick.png") top left no-repeat;
 }
 
-/* line 468, ../sass/style.scss */
+/* line 519, ../sass/style.scss */
 .movable {
   background: url("/resources/movable_brick.png") top left no-repeat;
 }
 
-/* line 473, ../sass/style.scss */
+/* line 524, ../sass/style.scss */
 .hidden {
   display: none;
 }
@@ -582,7 +666,7 @@ tr {
 /*
   forms 
 */
-/* line 481, ../sass/style.scss */
+/* line 532, ../sass/style.scss */
 .error_container {
   background: #b30a0a;
   margin: 20px 0px;
@@ -590,19 +674,19 @@ tr {
   border: 2px solid black;
   color: white;
 }
-/* line 488, ../sass/style.scss */
+/* line 539, ../sass/style.scss */
 .error_container ul {
   text-align: left;
   padding-left: 20px;
   list-style: disc;
 }
 
-/* line 495, ../sass/style.scss */
+/* line 546, ../sass/style.scss */
 .no_errors {
   display: none;
 }
 
-/* line 499, ../sass/style.scss */
+/* line 550, ../sass/style.scss */
 .has_errors {
   display: block;
 }

@@ -144,12 +144,16 @@ User = {{
     page_view(user) = 
     (
         Page.default({ some = "user" },
-            <h1>{user.name}</h1>
-            <ul>
-                <li>Games: {user.games}</li>
-                <li>Wins: {user.wins}</li>
-                <li>Losses: {user.losses}</li>
-            </ul>
+            <div id="profile_page">
+                <img src="/resources/pawn_rank.png" class="rank_image"/>
+                <h1>{user.name}</h1>
+                <h2>Rank: pawn</h2>
+                <ul>
+                    <li><h3>{user.games}</h3><span>Games</span></li>
+                    <li><h3>{user.wins}</h3><span>Wins</span></li>
+                    <li><h3>{user.losses}</h3><span>Losses</span></li>
+                </ul>
+            </div>
         )
     )
 }}

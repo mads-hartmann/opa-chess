@@ -107,7 +107,7 @@ Board = {{
                     
                     do Dom.select_raw("td.movable")  |> Dom.remove_class(_,"movable")
                     do Dom.select_raw("td.selected") |> Dom.remove_class(_,"selected")
-                    do Network.broadcast({ state = newBoard},channel()) 
+                    do Network.broadcast({ state = newBoard},channel())
                     do Network.broadcast(newBoard,persistent_game_state) 
                     void
                 ) else void
