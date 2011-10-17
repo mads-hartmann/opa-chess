@@ -62,6 +62,70 @@ body {
     font-family: Helvetica;
 }
 
+.text {
+  $color      : #8e6c40;
+  $padding    : 6px;
+  $height     : 50px;
+  background  : url('/resources/input_field_left.png') top left no-repeat;
+  padding-left: $padding;
+  display     : block;
+  height      : $height;
+  input {
+    background : url('/resources/input_field_right.png') top right no-repeat;
+    padding    : 0px $padding 0px 0px;
+    height     : $height;
+    outline    : none;
+    border     : 0px;
+    color      : $color;
+    font-size: 13px;
+    line-height: 13px;
+    font-weight: bold;
+  }
+  
+  input::-webkit-input-placeholder {
+      color:    $color;
+  }
+  input:-moz-placeholder {
+      color:    $color;
+  }
+}
+
+.button {
+  $height        : 50px;
+  $padding       : 6px;
+  background     : url('/resources/button_sprite_left.png') top left no-repeat;
+  height         : $height;
+  padding        : 0px 0px 0px $padding;
+  display        : block;
+  text-decoration: none;
+  text-align     : center;
+  
+  .inner {
+    background: url('/resources/button_sprite_right.png') top right no-repeat;
+    height: $height;
+    padding: 0px $padding 0px 0px;
+    margin: 0px 0px 0px 0px;
+    border: none;
+    float: none;
+    color: #940000;
+    font-weight: bold;
+    font-size: 14px;
+    @include text-shadow(#fff, 1px, 1px, 1px);
+  }
+  &:hover {
+    background-position: 0px (-$height);
+    .inner {
+      background-position: 100% (-$height);
+    }
+  }
+  &:active {
+    background-position: 0px (-$height*2);
+    .inner {
+      background-position: 100% (-$height*2);
+    }
+  }
+}
+
 .container { 
     
     margin     : 0px auto;
@@ -105,78 +169,9 @@ body {
           }
         }
     }
-    
-    .text {
-      $color      : #8e6c40;
-      $padding    : 6px;
-      $height     : 50px;
-      background  : url('/resources/input_field_left.png') top left no-repeat;
-      padding-left: $padding;
-      display     : block;
-      height      : $height;
-      input {
-        background : url('/resources/input_field_right.png') top right no-repeat;
-        padding    : 0px $padding 0px 0px;
-        height     : $height;
-        outline    : none;
-        border     : 0px;
-        color      : $color;
-        font-size: 13px;
-        line-height: 13px;
-        font-weight: bold;
-      }
-      
-      input::-webkit-input-placeholder {
-          color:    $color;
-      }
-      input:-moz-placeholder {
-          color:    $color;
-      }
-    }
-    
-    .button {
-      $height        : 50px;
-      $padding       : 6px;
-      background     : url('/resources/button_sprite_left.png') top left no-repeat;
-      height         : $height;
-      padding        : 0px 0px 0px $padding;
-      display        : block;
-      text-decoration: none;
-      text-align     : center;
-      
-      .inner {
-        background: url('/resources/button_sprite_right.png') top right no-repeat;
-        height: $height;
-        padding: 0px $padding 0px 0px;
-        margin: 0px 0px 0px 0px;
-        border: none;
-        float: none;
-        color: #940000;
-        font-weight: bold;
-        font-size: 14px;
-        @include text-shadow(#fff, 1px, 1px, 1px);
-      }
-      &:hover {
-        background-position: 0px (-$height);
-        .inner {
-          background-position: 100% (-$height);
-        }
-      }
-      &:active {
-        background-position: 0px (-$height*2);
-        .inner {
-          background-position: 100% (-$height*2);
-        }
-      }
-    }
-    
+
     ul { 
       text-align: left;
-    }
-    
-    input[type=submit] {
-        float     : right;
-        margin-top: 20px;
     }
         
     &#create {
@@ -220,7 +215,9 @@ body {
           .text {
             float: left;
             margin-left: 110px;
-            width: 294px;
+            input {
+              width: 294px;
+            }
           }
           .button {
             float: left;
@@ -299,20 +296,17 @@ body {
     }
     
     #chat_messages {
-      clear: both;
-      border: 0px;
+      clear     : both;
+      border    : 0px;
       background: transparent;
-      height: 200px;
-      margin: 20px 10px 10px 10px;
-      color: #ffebc7;
+      height    : 200px;
+      margin    : 20px 10px 10px 10px;
+      color     : #ffebc7;
       @include text-shadow(#000, 1px, 1px, 1px);
 
       li {
         margin: 3px 0px;
-      }
-      
-      .user {
-          font-weight: bold;
+        font-size: 13px;
       }
     }
 }
@@ -355,14 +349,47 @@ body {
         position  : absolute;
         left      : 0px;
         top       : 0px;
-        background: #9D9D9D;
+        background: url('/resources/chat_sidebar_bg.png') top left repeat-y;
         bottom    : 0px;
         width     : $sidebar-width;
         height    : 100%;
+        color: #ffebc7;
+        @include text-shadow(#000, 1px, 1px, 1px);
+
+        #chat_messages {
+          margin: 10px;
+          position: absolute;
+          left: 0px;
+          bottom: 70px;
+          top: 0px;
+          width: 280px;
+          overflow-y: scroll;
+        }
+
+        li {
+          margin: 3px 0px;
+          font-size: 13px;
+        }
         
         .input {
-            position: absolute;
-            bottom  : 10px;
+          position: absolute;
+          bottom: 20px;
+        }
+        
+        .text {
+          margin-left: 5px;
+          margin-right: 5px;
+          float: left;
+        }
+        
+        .button {
+          float: left;
+          .inner {
+            display: block;
+            width: 48px;
+            line-height: 47px;
+            float: left;
+          }
         }
     }
     
@@ -412,17 +439,23 @@ body {
 */
 
 td, th {
-    text-align: center;
-    width: 75px;
-    height: 75px;
+  text-align: center;
+  width: 75px !important;
+  height: 75px !important;
+  overflow: hidden;
+  display: inline-block;
+}
+
+tr {
+  height: 75px !important;
 }
 
 .selected {
-    background: green;
+    background: #79ae46;
 }
 
 .movable {
-    background: orange;
+    background: #f7b64b;
 }
 
 
