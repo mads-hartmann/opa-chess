@@ -20,11 +20,11 @@ game_finished_recieved(game_finished) = User.withUser( user ->
     game_state = Option.get(Game.get_state())
     do if game_finished.winner == game_state.color then 
         do User.update({ user with wins = user.wins+1})
-        do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "You've won!")
+        do Dom.select_raw("#waiting h1") |> Dom.set_html_unsafe(_, "Congratulations, You've won! Head back to the <a href='/'>menu</a>")
         Dom.show(#waiting)
     else 
         do User.update({ user with losses = user.losses+1})
-        do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "You've lost!")
+        do Dom.select_raw("#waiting h1") |> Dom.set_html_unsafe(_, "Buggers, you've lost! Head back to the <a href='/'>menu</a>")
         Dom.show(#waiting)
     /game[game_state.game] <- {none}
 , void)
@@ -152,24 +152,26 @@ Game = {{
         match Game.get(name) with 
             | { some = game } -> (
 
-                board = Option.bind( g -> g.board ,/game[name]) |>
-                        Option.default(Board.create(),_)
-                game_state  = Option.get(Game.get_state())
-                
-                xml = color -> 
-                    <div onready={_ -> Network.add_callback(game_finished_recieved, game_observer)}>
-                    <div onready={_ -> Network.add_callback(persistent_game_state_changed(name,_), persistent_game_state)}>
-                    <div onready={_ -> when_ready(name,color, board, game_state, game) } class="game">
-                            {Chat.create_with_channel(user.name, NetworkWrapperChat.memo(game.name ^ "_chat"))}
-                            {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
-                    </div>
-                    </div>
-                    </div>
+                if Option.get(game.white) == user || Option.get(game.black) == user then
+                    board = Option.bind( g -> g.board ,/game[name]) |>
+                            Option.default(Board.create(),_)
+                    game_state  = Option.get(Game.get_state())
 
-                if (Option.get(game.white) == user) then 
-                    Resource.styled_page("Chess", Page.style, xml({white}))
-                else 
-                    Resource.styled_page("Chess", Page.style, xml({black}))
+                    xml = color -> 
+                        <div onready={_ -> Network.add_callback(game_finished_recieved, game_observer)}>
+                        <div onready={_ -> Network.add_callback(persistent_game_state_changed(name,_), persistent_game_state)}>
+                        <div onready={_ -> when_ready(name,color, board, game_state, game) } class="game">
+                                {Chat.create_with_channel(user.name, NetworkWrapperChat.memo(game.name ^ "_chat"))}
+                                {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
+                        </div>
+                        </div>
+                        </div>
+
+                    if (Option.get(game.white) == user) then 
+                        Resource.styled_page("Chess", Page.style, xml({white}))
+                    else 
+                        Resource.styled_page("Chess", Page.style, xml({black}))
+                else Page.fourOfour()
             ) 
             | {none}  -> Page.fourOfour()
     ,User.login_view()) // 404 shouldn't happen

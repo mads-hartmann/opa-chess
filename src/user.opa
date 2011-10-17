@@ -15,7 +15,6 @@ db /user[_] = none
 
 type user = { 
     name: string ; 
-    email: string ; 
     password: string 
     games: int; 
     wins: int; 
@@ -61,19 +60,17 @@ User = {{
         do UserContext.change(( _ -> { unlogged }), state)
         Client.goto("/login")
     
-    create(username, email, password): outcome(user, list(string)) = 
+    create(username, password): outcome(user, list(string)) = 
         match /user[username] with 
             | {none} -> (
                 validator(c,a) = if String.is_empty(c.value) then [c.label ^ " is required"|a] else a
                 xs = [
                     { value = username label = "username" },
-                    { value = email label = "email" },
                     { value = password label = "password" }
                 ]
                 match List.fold(validator, xs, []) with 
                     | [] -> 
                         u = { name     = username 
-                              email    = email 
                               password = password 
                               games    = 0 
                               wins     = 0 
@@ -107,38 +104,42 @@ User = {{
             <ul onready={ _ -> Dom.give_focus(#username) }>
                 <li><span class="text"><input id=#username placeholder="Username"/></span></li>
                 <li><span class="text"><input id=#password placeholder="Password" type="password" onnewline={ _ -> attempt_login() }/></span></li>
-                <li><span class="button"><input type="submit" class="inner" value="Login" onclick={ _ -> attempt_login() } /></span></li>
+                <li>
+                    <span class="button"><input type="submit" class="inner" value="Login" onclick={ _ -> attempt_login() } /></span>
+                    <span class="button"><a class="inner" href="/signup">Signup</a></span>
+                </li>
             </ul>
             </div>
         )
     )
     
-    signup_view() = Page.default( {some = "signup"}, 
-        <ul>
-            <li>
-                <label>Username</label>
-                <input id=#username type="text" />
-            </li>
-            <li>
-                <label>Email</label>
-                <input id=#email type="text" />
-            </li>
-            <li>
-                <label>Password</label>
-                <input id=#password type="text" />
-            </li>
-            <li>
-                <input type="submit" value="Sign up" onclick={ _ -> 
-                    username = Dom.get_value(#username)
-                    email    = Dom.get_value(#email)
-                    password = Dom.get_value(#password)
-                    match User.create(username, email, password) with 
-                        | {failure = failure } -> Page.show_error(failure)                            
-                        | _ -> Client.goto("/")
-                } />
-            </li>
-        </ul>
-    )
+    signup_view() = 
+    (
+        attempt_signup() = 
+            username = Dom.get_value(#username)
+            password = Dom.get_value(#password)
+            match User.create(username, password) with 
+                | {failure = failure } -> Page.show_error(failure)                            
+                | _ -> Client.goto("/")
+            
+        Page.default( {some = "login"}, 
+            <div id="login_box">
+            <ul id="signup" onready={ _ -> Dom.give_focus(#username) }>
+                <li>
+                    <span class="text"><input id=#username placeholder="Username" type="text" /></span>
+                </li>
+                <li>
+                    <span class="text"><input id=#password placeholder="Password" type="password" onnewline={ _ -> attempt_signup() }  /></span>
+                </li>
+                <li>
+                    <span class="button">
+                    <input type="submit" class="inner" value="Sign up" onclick={ _ -> attempt_signup() } />
+                    </span>
+                </li>
+            </ul>
+            </div>
+        )
+    )   
     
     page_view(user) = 
     (
