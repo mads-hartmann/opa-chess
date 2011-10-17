@@ -101,13 +101,14 @@ Board = {{
                     posFrom  = Dom.select_raw("td.selected") |> Position.chess_position_from_dom(_, board)
                     posTo    = Position.chess_position_from_dom(td, board)
                     
-                    newBoard = if Dom.has_class(td,"en_passent") 
+                    newBoard: board = if Dom.has_class(td,"en_passent") 
                                then en_passent(posFrom, posTo, board)
                                else move(posFrom, posTo, board) 
                     
                     do Dom.select_raw("td.movable")  |> Dom.remove_class(_,"movable")
                     do Dom.select_raw("td.selected") |> Dom.remove_class(_,"selected")
                     do Network.broadcast({ state = newBoard},channel()) 
+                    do Network.broadcast(newBoard,persistent_game_state) 
                     void
                 ) else void
             ) else void 

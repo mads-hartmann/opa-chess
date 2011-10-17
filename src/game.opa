@@ -16,9 +16,9 @@ package chess
 type game_finished = { winner: colorC }
 
 @publish game_observer = Network.cloud("game_observer") : Network.network(game_finished) 
-
 game_finished_recieved(game_finished) = User.withUser( user -> 
-    if game_finished.winner == Option.get(Game.get_state()).color then 
+    game_state = Option.get(Game.get_state())
+    do if game_finished.winner == game_state.color then 
         do User.update({ user with wins = user.wins+1})
         do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "You've won!")
         Dom.show(#waiting)
@@ -26,7 +26,24 @@ game_finished_recieved(game_finished) = User.withUser( user ->
         do User.update({ user with losses = user.losses+1})
         do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "You've lost!")
         Dom.show(#waiting)
+    /game[game_state.game] <- {none}
 , void)
+
+/* 
+   This is very hacky :,-(  
+   
+   Tried to add a board to the Game.status type but safari couldn't handle it for 
+   some reason. This seems to work. 
+*/
+@publish persistent_game_state = Network.cloud("persistent_game_state") : Network.network(board) 
+persistent_game_state_changed(gameName: string, board: board) = 
+(
+    Option.iter( game -> 
+        
+        /game[gameName] <- some({ game with board = some(board) })
+    
+     ,/game[gameName])
+)
 
 /*
     Game module and related db 
@@ -35,15 +52,21 @@ game_finished_recieved(game_finished) = User.withUser( user ->
 db /game: stringmap(option(game))
 db /game[_] = none 
 
+// Some defaults. Should never be used as the default game is none
+db /game[_]/some/board/some/current_color = { black }
+db /game[_]/some/board/some/chess_positions[_][_]/piece/some/kind = { bishop }
+db /game[_]/some/board/some/chess_positions[_][_]/piece/some/color = { black }
+
 type game = { 
-    white: option(user) ; 
-    black: option(user) ; 
+    white: option(user) 
+    black: option(user) 
     name: string 
+    board: option(board)
 }
 
 type Game.status = { 
-    game: string ; 
-    color: colorC ; 
+    game: string  
+    color: colorC 
     channel: Network.network(message) 
 }
 
@@ -52,7 +75,7 @@ Game = {{
     /*
         Data related
     */
-    
+        
     user_state = UserContext.make({none}: option(Game.status))
 
     get_state() = UserContext.execute((a -> a), user_state)
@@ -77,7 +100,7 @@ Game = {{
                 if String.is_empty(name) then (
                     { failure = ["The name has to be non-empty"]}
                 ) else (
-                    game = { name = name white = some(user) black = none }
+                    game = { name = name white = some(user) black = none board = some(Board.create()) }
                     channel = NetworkWrapper.memo(name): Network.network(message)
                     do /game[name] <- some(game)
                     do UserContext.change(( _ -> { some = { game = name color = {white} channel = channel }}), user_state)
@@ -101,35 +124,46 @@ Game = {{
                 else
                     do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for " ^ colorc_to_string(board.current_color))
                     Dom.show(#waiting)
-                 Board.update(board)
+                Board.update(board)
             | { joining = _ } -> Dom.hide(#waiting)
 
     // invoked when the game_view is ready to initialize the dom with the appropriate data. 
-    @client when_ready(name,color): void = (
-        channel  = Option.get(Game.get_state()).channel
+    @client when_ready(name,color,board,game_state,game): void = (
+        channel = game_state.channel
+        
         do Dom.set_text(#color_of_player,colorc_to_string(color))
         do Dom.set_text(#name_of_game, name)
         do Dom.set_text(#color_of_current_player, colorc_to_string({white}))
         do Network.observe(message_recieved, channel)
-        do Option.iter( state -> (
-            if state.color == {white} then 
-                Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for black player")
+        
+        do if Option.is_none(game.black) then
+            Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for other player to join.")
+        else 
+            if game_state.color == color then 
+                Dom.hide(#waiting)
             else 
-                Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for white player")
-        ),Game.get_state())
-        Board.prepare(Board.create())
+                do Dom.select_raw("#waiting h1") |> Dom.set_text(_, "Waiting for other player to move.")
+                Dom.show(#waiting)
+
+        Board.prepare(board)
     )
 
     game_view(name: string) = User.withUser( user -> 
         match Game.get(name) with 
             | { some = game } -> (
 
+                board = Option.bind( g -> g.board ,/game[name]) |>
+                        Option.default(Board.create(),_)
+                game_state  = Option.get(Game.get_state())
+                
                 xml = color -> 
                     <div onready={_ -> Network.add_callback(game_finished_recieved, game_observer)}>
-                        <div onready={_ -> when_ready(name,color) } class="game">
+                    <div onready={_ -> Network.add_callback(persistent_game_state_changed(name,_), persistent_game_state)}>
+                    <div onready={_ -> when_ready(name,color, board, game_state, game) } class="game">
                             {Chat.create_with_channel(user.name, NetworkWrapperChat.memo(game.name ^ "_chat"))}
                             {Template.parse(Template.default, @static_content("resources/board.xmlt")()) |> Template.to_xhtml(Template.default, _)}
-                        </div>
+                    </div>
+                    </div>
                     </div>
 
                 if (Option.get(game.white) == user) then 

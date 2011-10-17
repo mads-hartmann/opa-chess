@@ -474,7 +474,7 @@ body {
 /* line 374, ../sass/style.scss */
 .game .chat .input {
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
 }
 /* line 379, ../sass/style.scss */
 .game .chat .text {
@@ -508,7 +508,7 @@ body {
   width: 600px;
   height: 600px;
   margin-left: -330px;
-  padding: 30px;
+  padding: 31px 30px 30px 31px;
   background: url("/resources/board-bg.png") 0px 0px no-repeat;
 }
 /* line 414, ../sass/style.scss */
@@ -553,12 +553,12 @@ tr {
 
 /* line 453, ../sass/style.scss */
 .selected {
-  background: #79ae46;
+  background: url("/resources/selected_brick.png") top left no-repeat;
 }
 
 /* line 457, ../sass/style.scss */
 .movable {
-  background: #f7b64b;
+  background: url("/resources/movable_brick.png") top left no-repeat;
 }
 
 /* line 462, ../sass/style.scss */

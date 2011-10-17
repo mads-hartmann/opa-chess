@@ -61,6 +61,7 @@ Page = {{
             do Dom.remove_content(#gamesList)
             Map.To.val_list(/game) 
                 |> List.filter_map( x -> x, _) 
+                |> List.filter( x -> Option.is_none(x.black), _) 
                 |> List.iter( x -> Dom.transform([#gamesList +<- 
                         <li onclick={_ -> 
                             match Game.join(x.name, user) with 
