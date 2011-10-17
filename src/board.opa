@@ -101,9 +101,7 @@ Board = {{
                     posFrom  = Dom.select_raw("td.selected") |> Position.chess_position_from_dom(_, board)
                     posTo    = Position.chess_position_from_dom(td, board)
                     
-                    newBoard: board = if Dom.has_class(td,"en_passent") 
-                               then en_passent(posFrom, posTo, board)
-                               else move(posFrom, posTo, board) 
+                    newBoard: board = move(posFrom, posTo, board) 
                     
                     do Dom.select_raw("td.movable")  |> Dom.remove_class(_,"movable")
                     do Dom.select_raw("td.selected") |> Dom.remove_class(_,"selected")
@@ -121,11 +119,6 @@ Board = {{
         do Position.movable_chess_positions(pos,piece,user_color(),board) |> List.iter(pos -> 
             movable = Position.select_chess_position(pos)
             Dom.add_class(movable,"movable")
-        ,_)
-        do Position.en_passent(pos,piece,user_color(),board) |> List.iter(pos -> 
-            movable = Position.select_chess_position(pos)
-            do Dom.add_class(movable,"movable")
-            Dom.add_class(movable,"en_passent")
         ,_)
         void
     )
@@ -212,22 +205,6 @@ Board = {{
             |> pos -> match pos with
                 | { piece = { some = ~{color ...}} ...} -> color != user_color()
                 | _ -> false
-    )
-
-    en_passent(posFrom, posTo, board): board = 
-    (
-        // move the piece. 
-        newBoard = move(posFrom, posTo, board)
-        // kill the pawn in passing
-        newPos = if board.current_color == {white}
-                 then Option.get(Position.down(posTo,1))
-                 else Option.get(Position.up(posTo,1))
-        
-        positions = Map.replace(newPos.letter, rows -> (
-            Map.replace(newPos.number, (oldPos -> { oldPos with piece = {none}}), rows)
-        ), newBoard.chess_positions)
-        
-        { chess_positions = positions current_color = newBoard.current_color }
     )
 
     move(posFrom, posTo, board): board = 

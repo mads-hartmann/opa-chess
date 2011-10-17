@@ -17,16 +17,17 @@ type game_finished = { winner: colorC }
 
 @publish game_observer = Network.cloud("game_observer") : Network.network(game_finished) 
 game_finished_recieved(game_finished) = User.withUser( user -> 
-    game_state = Option.get(Game.get_state())
-    do if game_finished.winner == game_state.color then 
-        do User.update({ user with wins = user.wins+1})
-        do Dom.select_raw("#waiting h1") |> Dom.set_html_unsafe(_, "Congratulations, You've won! Head back to the <a href='/'>menu</a>")
-        Dom.show(#waiting)
-    else 
-        do User.update({ user with losses = user.losses+1})
-        do Dom.select_raw("#waiting h1") |> Dom.set_html_unsafe(_, "Buggers, you've lost! Head back to the <a href='/'>menu</a>")
-        Dom.show(#waiting)
-    /game[game_state.game] <- {none}
+    Option.iter( game_state -> 
+        do if game_finished.winner == game_state.color then 
+            do User.update({ user with wins = user.wins+1})
+            do Dom.select_raw("#waiting h1") |> Dom.set_html_unsafe(_, "Congratulations, You've won! Head back to the <a href='/'>menu</a>")
+            Dom.show(#waiting)
+        else 
+            do User.update({ user with losses = user.losses+1})
+            do Dom.select_raw("#waiting h1") |> Dom.set_html_unsafe(_, "Buggers, you've lost! Head back to the <a href='/'>menu</a>")
+            Dom.show(#waiting)
+        /game[game_state.game] <- {none}
+    ,Game.get_state())    
 , void)
 
 /* 

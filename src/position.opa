@@ -101,7 +101,7 @@ Position = {{
         
         pawn_movements = 
         (            
-            mov(two_square,en_passent, movment_func_incl,movement_func) = 
+            mov(two_square,movment_func_incl,movement_func) = 
             (
                 movements = 
                     if pos.number == two_square
@@ -115,7 +115,7 @@ Position = {{
                 movements ++ attacks
             )
             
-            if user_color == {white} then mov(2,5,uIncl,u) else mov(7,4,dIncl,d)
+            if user_color == {white} then mov(2,uIncl,u) else mov(7,dIncl,d)
         )
         
         (match piece.kind with
@@ -125,36 +125,6 @@ Position = {{
             | {queen}  -> queen_movements
             | {rook}   -> rook_movements
             | {pawn}   -> pawn_movements) |> List.filter_map( x -> x , _)
-    )
-    
-    en_passent(pos: chess_position, piece: piece, user_color: colorC, board: board): list(chess_position) = 
-    (
-        // TODO: has to be the turn right after the double move    
-        mov(en_passent, direction, pawn_dir) = 
-            if pos.number == en_passent then
-                xs = [direction(pos) <*> right(_,1), direction(pos) <*> left(_,1) ]
-                List.filter_map(x -> x,xs) 
-                    // make sure you're not trying to move unto one of your own pieces 
-                    |> List.filter( p -> has_own(p,board) != true, _)
-                    // making sure that the piece you're passing is actually a pawn
-                    |> List.filter_map( p ->  
-                        pawn_pos = Option.get(pawn_dir(p))
-                        posi: chess_position =
-                            Map.get(pawn_pos.letter, board.chess_positions)
-                                |> Option.get(_) 
-                                |> Map.get(pawn_pos.number, _) 
-                                |> Option.get(_) 
-
-                        match posi with
-                            | { piece = {some = { kind = {pawn} ...}} ...} -> {some = p}
-                            | _ -> {none}
-                            
-                    ,_)
-            else []
-
-        match piece.kind with
-            | {pawn} -> if user_color == {white} then mov(5,up(_,1),down(_,1)) else mov(4,down(_,1),up(_,1))
-            | _ -> []
     )
 
     /*
