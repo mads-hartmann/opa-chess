@@ -86,8 +86,8 @@ Page = {{
                         <ul>
                             <a class="back" onclick={ _ -> create_back_onclick() }> ← Back</a>
                             <li>
-                                <input id=#name type="text" placeholder="Name of game" onnewline={_ -> create_game_onclick() }/>
-                                <a class="button" onclick={ _ -> create_game_onclick() }>Create</a>
+                                <span class="text"><input id=#name type="text" placeholder="Name of game" onnewline={_ -> create_game_onclick() }/></span>
+                                <a class="button" onclick={ _ -> create_game_onclick() }><span class="inner">Create</span></a>
                             </li>
                         </ul>
                     </div>
