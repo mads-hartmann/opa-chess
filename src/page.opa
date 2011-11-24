@@ -19,11 +19,18 @@ Page = {{
     */
     
     fourOfour() = default({ some = "fourofour"}, <h1>404</h1>)
-    
+
+    decorate(xhtml) =
+      <>
+        {xhtml}
+        <script src="http://opalang.org/google_analytics.js" />
+      </>
+
     default(idOpt: option(string), content) = 
     (
         id = Option.default("", idOpt)
         Resource.styled_page("Chess", style,
+          decorate(
             <div id="{id}" class="container">
                 <div id="error_container" class="error_container no_errors">
                     <ul id="errors"></ul>
@@ -32,6 +39,7 @@ Page = {{
                     {content}
                 </div>
             </div>
+          )
         )
     )
     
@@ -71,6 +79,7 @@ Page = {{
                     _)
 
         Resource.styled_page("Chess", style,
+          decorate(
             <div id="lobby" class="container">
             <div id="error_container" class="error_container no_errors">
                 <ul id="errors"></ul>
@@ -103,6 +112,7 @@ Page = {{
                 </form>
             </div>
             </div>
+          )
         )
     ), User.login_view())
     
