@@ -160,7 +160,6 @@ Game = {{
 
                     xml = color -> 
                       <>
-                        {Page.header}
                         <div onready={_ -> Network.add_callback(game_finished_recieved, game_observer)}>
                         <div onready={_ -> Network.add_callback(persistent_game_state_changed(name,_), persistent_game_state)}>
                         <div onready={_ -> when_ready(name,color, board, game_state, game) } class="game">
