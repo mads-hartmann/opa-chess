@@ -159,6 +159,8 @@ Game = {{
                     game_state  = Option.get(Game.get_state())
 
                     xml = color -> 
+                      <>
+                        {Page.header}
                         <div onready={_ -> Network.add_callback(game_finished_recieved, game_observer)}>
                         <div onready={_ -> Network.add_callback(persistent_game_state_changed(name,_), persistent_game_state)}>
                         <div onready={_ -> when_ready(name,color, board, game_state, game) } class="game">
@@ -167,7 +169,8 @@ Game = {{
                         </div>
                         </div>
                         </div>
-
+                        {Page.footer}
+                      </>
                     if (Option.get(game.white) == user) then 
                         Resource.styled_page("Chess", Page.style, xml({white}))
                     else 

@@ -690,3 +690,15 @@ tr {
 .has_errors {
   display: block;
 }
+
+.footer {
+  width: 445px;
+  position:relative;
+  margin: 8px auto 15px auto;
+  text-align:center;
+  font-weight:bold;
+}
+.footer span {margin: 0 5px;}
+.footer img {margin:3px 0 0 2px;}
+.footer span, .footer a, .footer img {vertical-align:top;}
+.footer a {color:#666;}
