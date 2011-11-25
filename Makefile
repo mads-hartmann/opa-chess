@@ -1,5 +1,6 @@
 OPA=opa
 EXE=chess.exe
+FLAGS = --minimal-version 991
 
 all: $(EXE)
 
