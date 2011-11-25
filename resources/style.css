@@ -19,6 +19,9 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+body {
+  font:normal 13px/100% Verdana, Tahoma, sans-serif;
+}
 
 /* line 20, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.3/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 body {
@@ -690,3 +693,19 @@ tr {
 .has_errors {
   display: block;
 }
+/* Footer */
+.footer {
+  width: 445px;
+  position:relative;
+  margin: 0;
+  text-align:right;
+  font-weight:bold;
+  position: absolute;
+  bottom: 10px;
+  right: 45px;
+  font-size:14px;
+}
+.footer, .footer a {color:#8D8D8D;text-decoration:none;}
+.footer span {margin: 0 5px;}
+.footer img {margin:1px 0 0 2px;}
+.footer span, .footer a, .footer img {vertical-align:top;}

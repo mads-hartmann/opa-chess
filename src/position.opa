@@ -15,7 +15,7 @@ Position = {{
     chess_position_from_dom(dom: dom, board): chess_position =
     (
         // Very hacky. The 7th and 8th chars are the colulm and row number.
-        clz    = Dom.get_property(dom,"class") |> Option.get(_)
+        clz    = Dom.get_attribute(dom,"class") |> Option.get(_)
         column = String.get(6, clz)
         row    = String.get(7, clz) |> String.to_int(_)
         Map.get(column, board.chess_positions) |> Option.get(_) |> Map.get(row, _) |> Option.get(_)
